@@ -9,33 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="days\Day01\" />
-    <Folder Include="days\Day02\" />
-    <Folder Include="days\Day03\" />
-    <Folder Include="days\Day04\" />
-    <Folder Include="days\Day05\" />
-    <Folder Include="days\Day06\" />
-    <Folder Include="days\Day07\" />
-    <Folder Include="days\Day08\" />
-    <Folder Include="days\Day09\" />
-    <Folder Include="days\Day10\" />
-    <Folder Include="days\Day11\" />
-    <Folder Include="days\Day12\" />
-    <Folder Include="days\Day13\" />
-    <Folder Include="days\Day14\" />
-    <Folder Include="days\Day15\" />
-    <Folder Include="days\Day16\" />
-    <Folder Include="days\Day17\" />
-    <Folder Include="days\Day18\" />
-    <Folder Include="days\Day19\" />
-    <Folder Include="days\Day20\" />
-    <Folder Include="days\Day21\" />
-    <Folder Include="days\Day22\" />
-    <Folder Include="days\Day23\" />
-    <Folder Include="days\Day24\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Days\Day01\day01-input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
