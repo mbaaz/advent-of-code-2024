@@ -1,10 +1,12 @@
-﻿namespace AoC.Y24.days;
+﻿using System.Text.RegularExpressions;
+
+namespace AoC.Y24.days;
 
 // This is my solution to the Advent of Code challenge!
 // <see>https://adventofcode.com/2024/day/3</see>
 public class Day03() : DaySolution(day: 3), IDaySolutionImplementation
 {
-    public bool IsActive => false;
+    public bool IsActive => true;
 
     public void Run(Action<string> output)
     {
@@ -20,8 +22,15 @@ public class Day03() : DaySolution(day: 3), IDaySolutionImplementation
     {
         RunWithTimer(output, () =>
         {
+            var multiplyOperations = input.SelectMany(GetMultiplyInstructions).ToList();
 
-            output($"Part 1 - resulting value is: ");
+            var multiplyOperationSum = multiplyOperations.Sum(tuple => tuple.Item1 * tuple.Item2);
+
+            output($"""
+PART 1
+      number of operations: {multiplyOperations.Count:n0}
+    sum of multiplications: {multiplyOperationSum:n0}
+""");
         });
     }
 
@@ -30,9 +39,25 @@ public class Day03() : DaySolution(day: 3), IDaySolutionImplementation
         RunWithTimer(output, () =>
         {
 
-            output($"Part 2 - resulting value is: ");
+            output($"""
+PART 2
+    result: [not yet defined!] 
+""");
         });
     }
 
     // ########################################################################################
+
+    private static readonly Regex MultiplyInstructionRegex = new(@"mul\((?<Factor1>[0-9]+),(?<Factor2>[0-9]+)\)");
+
+    private IEnumerable<(int, int)> GetMultiplyInstructions(string input)
+    {
+        var matches = MultiplyInstructionRegex.Matches(input);
+        foreach(Match match in matches)
+        {
+            var factor1 = int.Parse(match.Groups["Factor1"].Value);
+            var factor2 = int.Parse(match.Groups["Factor2"].Value);
+            yield return (factor1, factor2);
+        }
+    }
 }
