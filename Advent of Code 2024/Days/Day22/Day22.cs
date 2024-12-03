@@ -18,13 +18,19 @@ public class Day22() : DaySolution(day: 22), IDaySolutionImplementation
 
     private void RunPart1(string[] input, Action<string> output)
     {
+        RunWithTimer(output, () =>
+        {
 
-        output($"Part 1: ");
+            output($"Part 1: ");
+        });
     }
 
     private void RunPart2(string[] input, Action<string> output)
     {
+        RunWithTimer(output, () =>
+        {
 
-        output($"Part 2: ");
+            output($"Part 2: ");
+        });
     }
 }

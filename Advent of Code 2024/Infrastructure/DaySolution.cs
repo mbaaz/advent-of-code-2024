@@ -19,6 +19,11 @@ Welcome to Day {0}!
     private const string INPUT_DATA_FILE_NAME = "input";
     private const string INPUT_TEST_FILE_NAME = "test";
 
+    private const string TIMER_RESULT = """
+[Code executed for {0}s {1}ms]
+
+""";
+
     public int Day { get; } = day;
     public bool UseTestFile { get; protected set; } = false;
 
@@ -50,5 +55,18 @@ Welcome to Day {0}!
         {
             return [];
         }
+    }
+
+    protected void RunWithTimer(Action<string> output, Action codeToTime)
+    {
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+
+        codeToTime();
+
+        watch.Stop();
+        var elapsed = watch.Elapsed;
+        var elapsedSeconds = Math.Floor(elapsed.TotalSeconds);
+        var elapsedMilliseconds = elapsed.Milliseconds;
+        output(string.Format(TIMER_RESULT, elapsedSeconds, elapsedMilliseconds));
     }
 }

@@ -18,32 +18,37 @@ public class Day01() : DaySolution(day: 1), IDaySolutionImplementation
 
     private void RunPart1(string[] input, Action<string> output)
     {
-        var (list1, list2) = GetListsFromInput(input);
+        RunWithTimer(output, () =>
+        {
+            var (list1, list2) = GetListsFromInput(input);
 
-        list1.Sort();
-        list2.Sort();
-        var diff = list1.Select((t, i) => Math.Abs(t - list2[i])).Sum();
+            list1.Sort();
+            list2.Sort();
+            var diff = list1.Select((t, i) => Math.Abs(t - list2[i])).Sum();
 
-        output($"Part 1: {diff:n0}");
+            output($"Part 1: {diff:n0}");
+        });
     }
 
     private void RunPart2(string[] input, Action<string> output)
     {
-        var (list1, list2) = GetListsFromInput(input);
+        RunWithTimer(output, () => { 
+            var (list1, list2) = GetListsFromInput(input);
 
-        var totalScore = 0;
-        var calculatedScores = new Dictionary<int, int>();
-        foreach(var value in list1)
-        {
-            if(!calculatedScores.TryGetValue(value, out var score))
+            var totalScore = 0;
+            var calculatedScores = new Dictionary<int, int>();
+            foreach(var value in list1)
             {
-                score = value * list2.Count(val => val == value);
-                calculatedScores.Add(value, score);
+                if(!calculatedScores.TryGetValue(value, out var score))
+                {
+                    score = value * list2.Count(val => val == value);
+                    calculatedScores.Add(value, score);
+                }
+                totalScore += score;
             }
-            totalScore += score;
-        }
 
-        output($"Part 2: {totalScore:n0}");
+            output($"Part 2: {totalScore:n0}");
+        });
     }
 
     // ########################################################################################
