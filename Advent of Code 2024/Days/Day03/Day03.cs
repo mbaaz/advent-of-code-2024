@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using static AoC.Y24.days.Day03;
 
 namespace AoC.Y24.days;
 
@@ -19,15 +20,14 @@ public class Day03() : DaySolution(day: 3), IDaySolutionImplementation
     {
         RunWithTimer(output, () =>
         {
-            var multiplyOperations = input.SelectMany(GetMultiplyInstructions).ToList();
-
-            var multiplyOperationSum = multiplyOperations.Sum(tuple => tuple.Item1 * tuple.Item2);
+            var multiplyInstructions = input.SelectMany(GetMultiplyInstructions).ToList();
+            var multiplicationSum = multiplyInstructions.Sum(instruction => instruction.GetProduct());
 
             output($"""
 PART 1
                      input: {input[0]}
-      number of operations: {multiplyOperations.Count:n0}
-    sum of multiplications: {multiplyOperationSum:n0}
+      number of operations: {multiplyInstructions.Count:n0}
+    sum of multiplications: {multiplicationSum:n0}
 """);
         });
     }
@@ -36,11 +36,36 @@ PART 1
     {
         RunWithTimer(output, () =>
         {
+            var instructions = input.SelectMany(GetEnhancedInstructions).ToList();
+
+            var mulEnabled = true;
+            var multiplicationSum = 0;
+            foreach(var instruction in instructions)
+            {
+                if(instruction is DoInstruction)
+                {
+                    mulEnabled = true;
+                    continue;
+                }
+
+                if (instruction is DontInstruction)
+                {
+                    mulEnabled = false;
+                    continue;
+                }
+
+                if(mulEnabled && instruction is MultiplyInstruction multiplyInstruction)
+                {
+                    multiplicationSum += multiplyInstruction.GetProduct();
+                }
+            }
 
             output($"""
-PART 2
-     input: {input[0]}
-    result: [not yet defined!] 
+
+            PART 2
+                             input: {input[0]}
+              number of operations: {instructions.Count:n0}
+    sum of enabled multiplications: {multiplicationSum:n0}
 """);
         });
     }
@@ -49,27 +74,66 @@ PART 2
 
     private static readonly Regex MultiplyInstructionRegex = new(@"mul\((?<Factor1>[0-9]+),(?<Factor2>[0-9]+)\)");
 
-    private IEnumerable<(int, int)> GetMultiplyInstructions(string input)
+    private IEnumerable<MultiplyInstruction> GetMultiplyInstructions(string input)
     {
         var matches = MultiplyInstructionRegex.Matches(input);
         foreach(Match match in matches)
         {
             var factor1 = int.Parse(match.Groups["Factor1"].Value);
             var factor2 = int.Parse(match.Groups["Factor2"].Value);
-            yield return (factor1, factor2);
+            yield return new MultiplyInstruction(factor1, factor2);
         }
     }
 
-    private static readonly Regex EnhancedMultiplyInstructionRegex = new(@"mul\((?<Factor1>[0-9]+),(?<Factor2>[0-9]+)\)");
+    private static readonly Regex EnhancedMultiplyInstructionRegex = new(@"(?<Multiplication>mul\((?<Factor1>[0-9]+),(?<Factor2>[0-9]+)\))|(?<Do>do\(\)|(?<Dont>dont\(\)))");
 
-    private IEnumerable<(int, int)> GetEnhancedMultiplyInstructions(string input)
+    private IEnumerable<IInstruction> GetEnhancedInstructions(string input)
     {
-        var matches = MultiplyInstructionRegex.Matches(input);
+        var matches = EnhancedMultiplyInstructionRegex.Matches(input);
         foreach (Match match in matches)
         {
-            var factor1 = int.Parse(match.Groups["Factor1"].Value);
-            var factor2 = int.Parse(match.Groups["Factor2"].Value);
-            yield return (factor1, factor2);
+            if (match.Groups["Multiplication"].Success)
+            {
+                var factor1 = int.Parse(match.Groups["Factor1"].Value);
+                var factor2 = int.Parse(match.Groups["Factor2"].Value);
+                yield return new MultiplyInstruction(factor1, factor2);
+                continue;
+            }
+
+            if(match.Groups["Do"].Success)
+            {
+                yield return new DoInstruction();
+                continue;
+            }
+
+            if (match.Groups["Dont"].Success)
+            {
+                yield return new DontInstruction();
+                continue;
+            }
+
+
+            throw new Exception("Unknown instruction has been encountered!");
         }
+    }
+
+    public abstract class IInstruction { }
+
+    public class DoInstruction : IInstruction
+    {
+        
+    }
+
+    public class DontInstruction : IInstruction
+    {
+        
+    }
+
+    public class MultiplyInstruction(int factor1, int factor2) : IInstruction
+    {
+        public int Factor1 { get; } = factor1;
+        public int Factor2 { get; } = factor2;
+
+        public int GetProduct() => factor1 * factor2;
     }
 }
