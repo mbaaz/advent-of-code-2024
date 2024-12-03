@@ -21,7 +21,10 @@ public class Day14() : DaySolution(day: 14), IDaySolutionImplementation
         RunWithTimer(output, () =>
         {
 
-            output($"Part 1 - resulting value is: ");
+            output($"""
+PART 1
+    result: [not yet defined!] 
+""");
         });
     }
 
@@ -30,7 +33,10 @@ public class Day14() : DaySolution(day: 14), IDaySolutionImplementation
         RunWithTimer(output, () =>
         {
 
-            output($"Part 2 - resulting value is: ");
+            output($"""
+PART 2
+    result: [not yet defined!] 
+""");
         });
     }
 }

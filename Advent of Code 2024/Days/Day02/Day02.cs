@@ -24,7 +24,10 @@ public class Day02() : DaySolution(day: 2), IDaySolutionImplementation
                 .Sum(row => IsSafeReport(GetValues(row)) ? 1 : 0)
             ;
 
-            output($"Part 1 - Number of safe reports: {safeReports:n0}");
+            output($"""
+PART 1
+    Number of safe reports: {safeReports:n0}
+""");
         });
     }
 
@@ -36,7 +39,10 @@ public class Day02() : DaySolution(day: 2), IDaySolutionImplementation
                 .Sum(row => IsSafeReport(GetValues(row), useProblemDampener: true) ? 1 : 0)
             ;
 
-            output($"Part 2 - Number of safe reports with Problem Dampener active: {safeReports:n0}");
+            output($"""
+PART 2
+    Number of safe reports with Problem Dampener active: {safeReports:n0}
+""");
         });
     }
 
