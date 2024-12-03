@@ -1,101 +1,137 @@
 ﻿using System.Reflection;
 
-namespace AoC.Y24
+namespace AoC.Y24;
+
+public static class Program
 {
-    public static class Program
+    private const int MAX_TRIES = 3;
+    private const string EXIT = "exit";
+    private const string EXIT_SHORT = "x";
+
+    private const string WELCOME_MESSAGE = """
+Welcome to Advent of Code 2024!
+
+
+
+""";
+    private const string NO_SOLVERS_ACTIVE_MESSAGE = """
+No solvers are active yet - if you would attempt any puzzle first
+(and mark as active) then please come back again soon to try me!
+
+
+""";
+    private const string QUITTING_MESSAGE = """
+
+Thanks for this time!
+
+""";
+    private const string ENTER_KEY_TO_EXIT_MESSAGE = "Press any key to exit: ";
+    private const string GREETING_FORMAT = "Which day do you wish to run? [{0}]: ";
+
+
+    private const string INVALID_INPUT_TRY_AGAIN_MESSAGE = """
+Invalid input. Try again...
+
+
+""";
+    private const string INVALID_INPUT_QUITTING_MESSAGE = """
+Invalid input.
+Maximum number of invalid tries reached, quitting!
+
+
+""";
+
+    private const string SOLVER_EXCEPTION_MESSAGE_FORMAT = """
+Exception was thrown in solver:
+    {0}
+
+
+""";
+
+
+
+    public static void Main(string[] input)
     {
-        private const int MAX_TRIES = 3;
-        private const string EXIT = "exit";
+        Console.Write(WELCOME_MESSAGE);
 
-        public static void Main(string[] input)
+        var solverHelper = new SolverHelper();
+        var solvers = solverHelper.GetSolvers();
+
+        if(!solvers.Any())
         {
-            Console.WriteLine("Welcome to Advent of Code 2024!\n\n");
-            var solvers = GetSolvers();
+            Console.Write(NO_SOLVERS_ACTIVE_MESSAGE);
+            Quit();
+            return;
+        }
 
-            var greeting = $"Which day do you wish to run? [{solvers.Keys.Min()}-{solvers.Keys.Max()}]: ";
-            var @try = 0;
+        var availableSolvers = solvers.Count == 1 ? solvers.First().Key.ToString() : $"{solvers.Keys.Min()} - {solvers.Keys.Max()}";
+        var greeting = string.Format(GREETING_FORMAT, availableSolvers);
+        var @try = 0;
 
-            while (true)
+        while (true)
+        {
+            if (@try > 0)
             {
-                if (@try > 0)
+                if (@try < MAX_TRIES)
                 {
-                    Console.Write("Invalid input");
-
-                    if (@try < MAX_TRIES)
-                    {
-                        Console.WriteLine(", try again...");
-                    }
-                    else
-                    {
-                        Console.WriteLine("\nMaximum number of invalid tries");
-                        return;
-                    }
+                    Console.Write(INVALID_INPUT_TRY_AGAIN_MESSAGE);
                 }
-
-                @try++;
-
-                Console.Write(greeting);
-                var dayToRunInput = Console.ReadLine();
-
-                if (string.Equals(dayToRunInput, EXIT, StringComparison.InvariantCultureIgnoreCase))
+                else
                 {
-                    Console.WriteLine("\n\nQuitting, thanks for this time!");
+                    Console.Write(INVALID_INPUT_QUITTING_MESSAGE);
+                    Quit();
                     return;
                 }
+            }
 
-                IDaySolutionImplementation? solver = null;
-                if (string.IsNullOrEmpty(dayToRunInput))
-                {
-                    solver = solvers[solvers.Keys.Max()];
-                }
-                else if (int.TryParse(dayToRunInput, out var dayToRun) && solvers.TryGetValue(dayToRun, out var solver1))
-                {
-                    solver = solver1;
-                }
+            @try++;
+
+            Console.Write(greeting);
+            var dayToRunInput = Console.ReadLine();
+
+            if (
+                string.Equals(dayToRunInput, EXIT, StringComparison.InvariantCultureIgnoreCase) ||
+                string.Equals(dayToRunInput, EXIT_SHORT, StringComparison.InvariantCultureIgnoreCase)
+            )
+            {
+                Quit(bypassInput: true);
+                return;
+            }
+
+            IDaySolutionImplementation? solver = null;
+            if (string.IsNullOrEmpty(dayToRunInput))
+            {
+                solver = solvers[solvers.Keys.Max()];
+            }
+            else if (int.TryParse(dayToRunInput, out var dayToRun) && solvers.TryGetValue(dayToRun, out var solver1))
+            {
+                solver = solver1;
+            }
                 
-                if (solver != null)
+            if (solver != null)
+            {
+                @try = 0;
+                try
                 {
-                    @try = 0;
-                    try
-                    {
-                        solver?.Run(Console.WriteLine);
-                        Console.WriteLine("\n");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Exception was thrown in solver:\n\t{ex.Message}");
-                    }
+                    solver?.Run(Console.WriteLine);
+                    Console.Write("\n\n");
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(SOLVER_EXCEPTION_MESSAGE_FORMAT, ex.Message);
                 }
             }
         }
-        
-        private static IDictionary<int, IDaySolutionImplementation?> GetSolvers()
-        {
-            var types = GetSolverTypes();
-            var solvers = types
-                .Select(t => Activator.CreateInstance(t) as IDaySolutionImplementation)
-                .Where(s => 
-                    s != null && 
-                    s.IsActive
-                )
-                .ToDictionary(s => s!.Day)
-            ;
-            return solvers;
-        }
+    }
+     
+    private static void Quit(bool bypassInput = false)
+    {
+        Console.Write(QUITTING_MESSAGE);
 
-        private static IEnumerable<Type> GetSolverTypes()
+        if(!bypassInput)
         {
-            var solverType = typeof(IDaySolutionImplementation);
-            var types = Assembly.GetExecutingAssembly().GetTypes()
-                .Where(type => 
-                    solverType.IsAssignableFrom(type) && 
-                    !type.IsInterface && 
-                    type.IsClass && 
-                    !type.IsAbstract
-                )
-                .ToList()
-            ;
-            return types;
+            Console.Write(ENTER_KEY_TO_EXIT_MESSAGE);
+            Console.ReadKey();
         }
     }
 }

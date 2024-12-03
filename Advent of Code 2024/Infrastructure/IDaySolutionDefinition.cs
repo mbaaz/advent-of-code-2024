@@ -3,5 +3,4 @@
 public interface IDaySolutionDefinition
 {
     public int Day { get; }
-    public bool UseTestFile { get; }
 }
