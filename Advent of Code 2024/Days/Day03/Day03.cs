@@ -28,6 +28,7 @@ public class Day03() : DaySolution(day: 3), IDaySolutionImplementation
 
             output($"""
 PART 1
+                     input: {input[0]}
       number of operations: {multiplyOperations.Count:n0}
     sum of multiplications: {multiplyOperationSum:n0}
 """);
@@ -41,6 +42,7 @@ PART 1
 
             output($"""
 PART 2
+     input: {input[0]}
     result: [not yet defined!] 
 """);
         });
@@ -54,6 +56,19 @@ PART 2
     {
         var matches = MultiplyInstructionRegex.Matches(input);
         foreach(Match match in matches)
+        {
+            var factor1 = int.Parse(match.Groups["Factor1"].Value);
+            var factor2 = int.Parse(match.Groups["Factor2"].Value);
+            yield return (factor1, factor2);
+        }
+    }
+
+    private static readonly Regex EnhancedMultiplyInstructionRegex = new(@"mul\((?<Factor1>[0-9]+),(?<Factor2>[0-9]+)\)");
+
+    private IEnumerable<(int, int)> GetEnhancedMultiplyInstructions(string input)
+    {
+        var matches = MultiplyInstructionRegex.Matches(input);
+        foreach (Match match in matches)
         {
             var factor1 = int.Parse(match.Groups["Factor1"].Value);
             var factor2 = int.Parse(match.Groups["Factor2"].Value);
