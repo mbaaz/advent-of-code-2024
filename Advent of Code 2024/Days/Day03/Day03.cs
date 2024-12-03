@@ -8,17 +8,14 @@ public class Day03() : DaySolution(day: 3), IDaySolutionImplementation
 {
     public bool IsActive => true;
 
-    public void Run(Action<string> output)
+    public override void Run(Action<string> output)
     {
-        UseTestFile = false;
+        UseTestFile = true;
 
-        output(GetWelcomeMessage);
-        var input = GetInput();
-        RunPart1(input, output);
-        RunPart2(input, output);
+        base.Run(output);
     }
 
-    private void RunPart1(string[] input, Action<string> output)
+    public override void RunPart1(string[] input, Action<string> output)
     {
         RunWithTimer(output, () =>
         {
@@ -35,7 +32,7 @@ PART 1
         });
     }
 
-    private void RunPart2(string[] input, Action<string> output)
+    public override void RunPart2(string[] input, Action<string> output)
     {
         RunWithTimer(output, () =>
         {
