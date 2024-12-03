@@ -26,7 +26,10 @@ public class Day01() : DaySolution(day: 1), IDaySolutionImplementation
             list2.Sort();
             var diff = list1.Select((t, i) => Math.Abs(t - list2[i])).Sum();
 
-            output($"Part 1 - Total difference is: {diff:n0}");
+            output($"""
+PART 1
+    Total difference is: {diff:n0}
+""");
         });
     }
 
@@ -47,7 +50,10 @@ public class Day01() : DaySolution(day: 1), IDaySolutionImplementation
                 totalScore += score;
             }
 
-            output($"Part 2 - Similarity score is: {totalScore:n0}");
+            output($"""
+PART 1
+    Similarity score is: {totalScore:n0}
+""");
         });
     }
 
