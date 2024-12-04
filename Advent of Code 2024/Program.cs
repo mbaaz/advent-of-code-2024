@@ -50,7 +50,7 @@ Exception was thrown in solver:
 
 """;
 
-    private static readonly Regex InputRegex = new(@"(?<Exit>exit|[Xx])|(?<Day>[0-9]+)(?<UseTestInput>[Tt])?");
+    private static readonly Regex InputRegex = new(@"^(?<Exit>exit|[Xx])|(?<Day>[0-9]+)(?<UseTestInput>[Tt])?$");
 
     public static void Main(string[] input)
     {
