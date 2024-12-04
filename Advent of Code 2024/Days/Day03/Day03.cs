@@ -11,7 +11,7 @@ public class Day03() : DaySolution(day: 3), IDaySolutionImplementation
 
     public override void Run(Action<string> output)
     {
-        UseTestFile = true;
+        UseTestFile = false;
 
         base.Run(output);
     }
@@ -25,7 +25,6 @@ public class Day03() : DaySolution(day: 3), IDaySolutionImplementation
 
             output($"""
 PART 1
-                     input: {input[0]}
       number of operations: {multiplyInstructions.Count:n0}
     sum of multiplications: {multiplicationSum:n0}
 """);
@@ -61,9 +60,7 @@ PART 1
             }
 
             output($"""
-
             PART 2
-                             input: {input[0]}
               number of operations: {instructions.Count:n0}
     sum of enabled multiplications: {multiplicationSum:n0}
 """);
@@ -85,7 +82,7 @@ PART 1
         }
     }
 
-    private static readonly Regex EnhancedMultiplyInstructionRegex = new(@"(?<Multiplication>mul\((?<Factor1>[0-9]+),(?<Factor2>[0-9]+)\))|(?<Do>do\(\)|(?<Dont>dont\(\)))");
+    private static readonly Regex EnhancedMultiplyInstructionRegex = new(@"(?<Multiplication>mul\((?<Factor1>[0-9]+),(?<Factor2>[0-9]+)\))|(?<Do>do\(\))|(?<Dont>don\'t\(\))");
 
     private IEnumerable<IInstruction> GetEnhancedInstructions(string input)
     {
