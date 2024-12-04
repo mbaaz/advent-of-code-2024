@@ -2,17 +2,9 @@
 
 // This is my solution to the Advent of Code challenge!
 // <see>https://adventofcode.com/2024/day/9</see>
+[DaySolution(Day = 9, IsActive = false)]
 public class Day09() : DaySolution(day: 9), IDaySolutionImplementation
 {
-    public bool IsActive => false;
-
-    public override void Run(Action<string> output)
-    {
-        UseTestFile = false;
-
-        base.Run(output);
-    }
-
     public override void RunPart1(string[] input, Action<string> output)
     {
         RunWithTimer(output, () =>
