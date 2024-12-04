@@ -5,27 +5,16 @@
 [DaySolution(Day = 22, IsActive = false)]
 public class Day22() : DaySolution(day: 22), IDaySolutionImplementation
 {
-    public override void RunPart1(string[] input, Action<string> output)
+    public override void RunPart1(string[] input, Action<OutputMessage> output)
     {
-        RunWithTimer(output, () =>
-        {
-
-            output($"""
-PART 1
-    result: [not yet defined!] 
-""");
-        });
+        output(new("Result", "[not yet defined]"));
     }
 
-    public override void RunPart2(string[] input, Action<string> output)
+    public override void RunPart2(string[] input, Action<OutputMessage> output)
     {
-        RunWithTimer(output, () =>
-        {
-
-            output($"""
-PART 2
-    result: [not yet defined!] 
-""");
-        });
+        output(new("Result", "[not yet defined]"));
     }
+
+    // ########################################################################################
+
 }

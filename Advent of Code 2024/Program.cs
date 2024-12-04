@@ -24,9 +24,9 @@ Thanks for this time!
 """;
     private const string ENTER_KEY_TO_EXIT_MESSAGE = "Press any key to exit: ";
     private const string GREETING_FORMAT = """
-
 Solvers for the following days puzzles are defined: {0}
 To use test input rather than puzzle input, suffix input with [Tt].
+Enter "exit" or [Xx] to quit.
 Which day do you wish to run? [{1}]: 
 """;
 
@@ -52,15 +52,28 @@ Exception was thrown in solver:
 
     private static readonly Regex InputRegex = new(@"^(?<Exit>exit|[Xx])|(?<Day>[0-9]+)(?<UseTestInput>[Tt])?$");
 
+    public static void Output(string message)
+    {
+        Console.Write(message);
+    }
+
     public static void Main(string[] input)
     {
-        Console.Write(WELCOME_MESSAGE);
+        // Prepare Console
+        Console.WindowWidth = 150;
+        Console.WindowHeight = 60;
+
+        // Prepare output
+        var outputWrapper = new OutputWrapper();
+        var output = outputWrapper.GetAddOutputAction();
+
+        output(new(WELCOME_MESSAGE));
 
         var solverHelper = new SolverHelper();
 
         if(!solverHelper.HasSolvers)
         {
-            Console.Write(NO_SOLVERS_ACTIVE_MESSAGE);
+            Output(NO_SOLVERS_ACTIVE_MESSAGE);
             Quit();
             return;
         }
@@ -76,63 +89,79 @@ Exception was thrown in solver:
             {
                 if (@try < MAX_TRIES)
                 {
-                    Console.Write(INVALID_INPUT_TRY_AGAIN_MESSAGE);
+                    Output(INVALID_INPUT_TRY_AGAIN_MESSAGE);
                 }
                 else
                 {
-                    Console.Write(INVALID_INPUT_QUITTING_MESSAGE);
+                    Output(INVALID_INPUT_QUITTING_MESSAGE);
                     Quit();
                     return;
                 }
             }
 
-            @try++;
+            var solverHasRun = HandleInput(solverHelper, greeting, defaultInput, out var quit);
+            @try = solverHasRun ? 0 : @try + 1; // If solver has run - reset try count
 
-            Console.Write(greeting);
-            var dayToRunInput = Console.ReadLine() ?? defaultInput;
-            if(string.IsNullOrWhiteSpace(dayToRunInput))
+            if(quit)
             {
-                dayToRunInput = defaultInput;
-            }
-
-            var match = InputRegex.Match(dayToRunInput);
-
-            if (match.Groups["Exit"].Success)
-            {
-                Quit(bypassInput: true);
                 return;
-            }
-
-            if(match.Groups["Day"].Success)
-            {
-                var dayToRun = int.Parse(match.Groups["Day"].Value);
-                var useTestInput = match.Groups["UseTestInput"].Success;
-
-                var solver = solverHelper.GetSolverForDay(dayToRun);
-                if(solver == null)
-                    continue;
-
-                @try = 0;
-                try
-                {
-                    solver?.Run(Console.WriteLine, useTestInput);
-                    Console.Write("\n\n");
-                }
-                catch (Exception ex)
-                {
-                    Console.Write(SOLVER_EXCEPTION_MESSAGE_FORMAT, ex.Message);
-                }
             }
         }
     }
      
+    private static bool HandleInput(SolverHelper solverHelper, string greeting, string defaultInput, out bool quit)
+    {
+        quit = false;
+        Output(greeting);
+
+        var dayToRunInput = Console.ReadLine() ?? defaultInput;
+        if (string.IsNullOrWhiteSpace(dayToRunInput))
+        {
+            dayToRunInput = defaultInput;
+        }
+
+        var match = InputRegex.Match(dayToRunInput);
+
+        if (match.Groups["Exit"].Success)
+        {
+            Quit(bypassInput: true);
+            quit = true;
+            return false;
+        }
+
+        if (match.Groups["Day"].Success)
+        {
+            var dayToRun = int.Parse(match.Groups["Day"].Value);
+            var useTestInput = match.Groups["UseTestInput"].Success;
+
+            var solver = solverHelper.GetSolverForDay(dayToRun);
+            if (solver == null)
+                return false;
+
+            try
+            {
+                var maxWidth = Console.WindowWidth - 1; // Make maxWidth smaller than window - otherwise if they match some consoles with omit NewLines at the end of input
+                solver.Run(Output, maxWidth, useTestInput);
+                Output($"{Environment.NewLine}{Environment.NewLine}");
+            }
+            catch (Exception ex)
+            {
+                Output(string.Format(SOLVER_EXCEPTION_MESSAGE_FORMAT, ex.Message));
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     private static void Quit(bool bypassInput = false)
     {
-        Console.Write(QUITTING_MESSAGE);
+        Output(QUITTING_MESSAGE);
 
         if(!bypassInput)
         {
-            Console.Write(ENTER_KEY_TO_EXIT_MESSAGE);
+            Output(ENTER_KEY_TO_EXIT_MESSAGE);
             Console.ReadKey();
         }
     }

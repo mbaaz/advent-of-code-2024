@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using static AoC.Y24.days.Day03;
 
 namespace AoC.Y24.days;
 
@@ -7,55 +8,43 @@ namespace AoC.Y24.days;
 [DaySolution(Day = 3, IsActive = true)]
 public class Day03() : DaySolution(day: 3), IDaySolutionImplementation
 {
-    public override void RunPart1(string[] input, Action<string> output)
+    public override void RunPart1(string[] input, Action<OutputMessage> output)
     {
-        RunWithTimer(output, () =>
-        {
-            var multiplyInstructions = input.SelectMany(GetMultiplyInstructions).ToList();
-            var multiplicationSum = multiplyInstructions.Sum(instruction => instruction.GetProduct());
+        var multiplyInstructions = input.SelectMany(GetMultiplyInstructions).ToList();
+        var multiplicationSum = multiplyInstructions.Sum(instruction => instruction.GetProduct());
 
-            output($"""
-PART 1
-      number of operations: {multiplyInstructions.Count:n0}
-    sum of multiplications: {multiplicationSum:n0}
-""");
-        });
+        output(new("Number of operations", $"{multiplyInstructions.Count:n0}"));
+        output(new("Sum of multiplications", $"{multiplicationSum:n0}"));
     }
 
-    public override void RunPart2(string[] input, Action<string> output)
+    public override void RunPart2(string[] input, Action<OutputMessage> output)
     {
-        RunWithTimer(output, () =>
+        var instructions = input.SelectMany(GetEnhancedInstructions).ToList();
+
+        var mulEnabled = true;
+        var multiplicationSum = 0;
+        foreach(var instruction in instructions)
         {
-            var instructions = input.SelectMany(GetEnhancedInstructions).ToList();
-
-            var mulEnabled = true;
-            var multiplicationSum = 0;
-            foreach(var instruction in instructions)
+            if(instruction is DoInstruction)
             {
-                if(instruction is DoInstruction)
-                {
-                    mulEnabled = true;
-                    continue;
-                }
-
-                if (instruction is DontInstruction)
-                {
-                    mulEnabled = false;
-                    continue;
-                }
-
-                if(mulEnabled && instruction is MultiplyInstruction multiplyInstruction)
-                {
-                    multiplicationSum += multiplyInstruction.GetProduct();
-                }
+                mulEnabled = true;
+                continue;
             }
 
-            output($"""
-            PART 2
-              number of operations: {instructions.Count:n0}
-    sum of enabled multiplications: {multiplicationSum:n0}
-""");
-        });
+            if (instruction is DontInstruction)
+            {
+                mulEnabled = false;
+                continue;
+            }
+
+            if(mulEnabled && instruction is MultiplyInstruction multiplyInstruction)
+            {
+                multiplicationSum += multiplyInstruction.GetProduct();
+            }
+        }
+
+        output(new("Number of operations", $"{instructions.Count:n0}"));
+        output(new("Sum of enabled multiplications", $"{multiplicationSum:n0}"));
     }
 
     // ########################################################################################

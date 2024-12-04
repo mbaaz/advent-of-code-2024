@@ -5,45 +5,34 @@
 [DaySolution(Day = 1, IsActive = true)]
 public class Day01() : DaySolution(day: 1), IDaySolutionImplementation
 {
-    public override void RunPart1(string[] input, Action<string> output)
+    public override void RunPart1(string[] input, Action<OutputMessage> output)
     {
-        RunWithTimer(output, () =>
-        {
-            var (list1, list2) = GetListsFromInput(input);
+        var (list1, list2) = GetListsFromInput(input);
 
-            list1.Sort();
-            list2.Sort();
-            var diff = list1.Select((t, i) => Math.Abs(t - list2[i])).Sum();
+        list1.Sort();
+        list2.Sort();
+        var diff = list1.Select((t, i) => Math.Abs(t - list2[i])).Sum();
 
-            output($"""
-PART 1
-    Total difference is: {diff:n0}
-""");
-        });
+        output(new("Total difference is", $"{diff:n0}"));
     }
 
-    public override void RunPart2(string[] input, Action<string> output)
+    public override void RunPart2(string[] input, Action<OutputMessage> output)
     {
-        RunWithTimer(output, () => { 
-            var (list1, list2) = GetListsFromInput(input);
+        var (list1, list2) = GetListsFromInput(input);
 
-            var totalScore = 0;
-            var calculatedScores = new Dictionary<int, int>();
-            foreach(var value in list1)
+        var totalScore = 0;
+        var calculatedScores = new Dictionary<int, int>();
+        foreach(var value in list1)
+        {
+            if(!calculatedScores.TryGetValue(value, out var score))
             {
-                if(!calculatedScores.TryGetValue(value, out var score))
-                {
-                    score = value * list2.Count(val => val == value);
-                    calculatedScores.Add(value, score);
-                }
-                totalScore += score;
+                score = value * list2.Count(val => val == value);
+                calculatedScores.Add(value, score);
             }
+            totalScore += score;
+        }
 
-            output($"""
-PART 1
-    Similarity score is: {totalScore:n0}
-""");
-        });
+        output(new("Similarity score is", $"{totalScore:n0}"));
     }
 
     // ########################################################################################
