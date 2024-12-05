@@ -52,10 +52,10 @@ public abstract class DaySolution(int day) : IDaySolutionDefinition
             output($"{string.Format(BORDERED_OUTPUT_LINE_FORMAT, BORDERED_OUTPUT_CHAR, tempLine)}{Environment.NewLine}");
         }
     }
-    public void Run(Action<OutputMessage> output, int outputWidth, bool useTestInput)
+    public void Run(Action<OutputMessage> output, bool useTestInput)
     {
         // Print top border
-        output(new($"{Environment.NewLine}{new string(BORDERED_OUTPUT_CHAR, outputWidth)}{Environment.NewLine}"));
+        output(new FullLineOutputMessage(BORDERED_OUTPUT_CHAR));
         BorderedOutput("");
 
         // Print Welcome Message
@@ -68,16 +68,17 @@ public abstract class DaySolution(int day) : IDaySolutionDefinition
 
         // Print bottom border
         BorderedOutput("");
-        output(new($"{new string(BORDERED_OUTPUT_CHAR, outputWidth)}{Environment.NewLine}"));
+        output(new FullLineOutputMessage(BORDERED_OUTPUT_CHAR));
         return;
 
+        void WrappedOutput(o)
         void BorderedOutput(object message, int indentLevel = 0) => OutputWithBorder(output, outputWidth, message, indentLevel);
     }
 
     private void RunPart(PuzzlePart puzzlePart, Action<string, int> output, bool useTestInput)
     {
         // Prepare to run the puzzle part
-        var outputWrapper = new OutputWrapper();
+        
         var input = GetInput(puzzlePart, useTestInput);
 
         // Present the puzzle part that is executing
@@ -106,9 +107,9 @@ public abstract class DaySolution(int day) : IDaySolutionDefinition
         output(new("Puzzle Solver has not yet implemented [RunPart1] method!"));
     }
 
-    public virtual void RunPart2(string[] input, Action<OutputMessage> output)
+    public virtual void RunPart2(string[] input, Action<object[]> output)
     {
-        output(new("Puzzle Solver has not yet implemented [RunPart2] method!"));
+        output("Puzzle Solver has not yet implemented [RunPart2] method!", "");
     }
 
     protected string[] GetInput(PuzzlePart puzzlePart, bool useTestInput)

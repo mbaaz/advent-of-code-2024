@@ -14,7 +14,8 @@ public class SolverHelper
     {
         Solvers = GetSolvers();
         DefinedSolversHumanReadable = GetDefinedSolverForDays(Solvers.Keys);
-        LatestDayWithSolver = Solvers.Keys.Max();
+
+        LatestDayWithSolver = HasSolvers ? Solvers.Keys.Max() : 0;
     }
 
     public IDaySolutionImplementation? GetSolverForDay(int day)

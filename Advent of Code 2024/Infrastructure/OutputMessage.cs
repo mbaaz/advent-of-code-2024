@@ -23,7 +23,7 @@ public class OutputMessage
             throw new Exception("Output Message is not defined for more than 2 parts!");
     }
 
-    public void WriteToOutput(Action<string> output, int twoPartMessagesFirstTextLength, int maxLineLength)
+    public virtual void WriteToOutput(Action<string> output, int twoPartMessagesFirstTextLength, int maxLineLength)
     {
         if (Parts.Count == 1)
         {

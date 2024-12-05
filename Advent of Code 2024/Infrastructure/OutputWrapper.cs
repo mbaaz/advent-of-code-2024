@@ -1,6 +1,6 @@
 ﻿namespace AoC.Y24.Infrastructure;
 
-public class OutputWrapper(int maxLineLength)
+public class OutputWrapper(int maxLineLength, Action<string> writer)
 {
     private List<OutputMessage> Messages { get; set; } = new List<OutputMessage>();
 
@@ -11,16 +11,20 @@ public class OutputWrapper(int maxLineLength)
         Messages.Add(new OutputMessage(input));
     }
 
-    public void WriteOutput(Action<string> output)
+    public void Flush()
     {
         var twoPartMessagesFirstTextLength = Messages.Max(msg => msg.IfTwoPartsThenFirstPartLength);
 
-        
         foreach(var message in Messages)
         {
-            message.WriteToOutput(output, twoPartMessagesFirstTextLength, maxLineLength);
+            message.WriteToOutput(writer, twoPartMessagesFirstTextLength, maxLineLength);
         }
 
+        Clear();
+    }
+
+    public void Clear()
+    {
         // Reset Messages for future
         Messages.Clear();
     }
