@@ -7,9 +7,14 @@ public class OutputMessage
 
     private List<string> Parts { get; }
 
-    public OutputMessage(params string[] parts)
+    public int IfTwoPartsThenFirstPartLength => Parts.Count == 2 ? Parts[0].Length : 0;
+
+    public OutputMessage(params object[] parts)
     {
-        Parts = parts.ToList();
+        Parts = parts
+            .Select(item => item?.ToString() ?? string.Empty)
+            .ToList()
+        ;
 
         if(!parts.Any())
             Parts.Add(string.Empty);
@@ -18,12 +23,12 @@ public class OutputMessage
             throw new Exception("Output Message is not defined for more than 2 parts!");
     }
 
-    public IEnumerable<string> ToString(int ifTwoPartsFirstPartLength, int maxLineLength)
+    public void WriteToOutput(Action<string> output, int twoPartMessagesFirstTextLength, int maxLineLength)
     {
         if (Parts.Count == 1)
         {
-            yield return Parts.First();
-            yield break;
+            output(Parts.First());
+            return;
         }
 
         if(Parts.Count != 2)
@@ -39,15 +44,16 @@ public class OutputMessage
             throw new Exception("First part of Output Message exceeds max line length - I do not know what to do now!");
         }
 
-        var part1 = firstPart.PadLeft(ifTwoPartsFirstPartLength, PAD_CHAR);
+        var part1 = firstPart.PadLeft(twoPartMessagesFirstTextLength, PAD_CHAR);
         var part2MaxLength = maxLineLength - part1.Length - TWO_PARTS_SEPARATOR.Length;
         var parts2 = secondPart.SplitToLines(part2MaxLength).ToList();
+        var part2FollowingLinesPadding = new string(PAD_CHAR, part1.Length + TWO_PARTS_SEPARATOR.Length);
         for(var i=0;i<parts2.Count;i++)
         {
-            yield return (i == 0)
+            output((i == 0)
                 ? $"{part1}{TWO_PARTS_SEPARATOR}{parts2[i]}"
-                : parts2[i]
-            ;
+                : $"{part2FollowingLinesPadding}{parts2[i]}"
+            );
         }
     }
 }

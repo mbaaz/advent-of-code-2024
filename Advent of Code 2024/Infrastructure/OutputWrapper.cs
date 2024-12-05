@@ -1,32 +1,24 @@
 ﻿namespace AoC.Y24.Infrastructure;
 
-public class OutputWrapper
+public class OutputWrapper(int maxLineLength)
 {
     private List<OutputMessage> Messages { get; set; } = new List<OutputMessage>();
 
-    public Action<string[]> GetAddOutputAction() => (string[] messages) => Messages.Add(new OutputMessage(messages));
+    public Action<object[]> GetAddOutputAction() => AddMessage;
 
-    public void AddMessage(params IFormattable[] input)
+    public void AddMessage(params object[] input)
     {
-        var outputMessage = new OutputMessage(input);
-        Messages.Add(outputMessage);
+        Messages.Add(new OutputMessage(input));
     }
 
-    public void WriteOutput(Action<string> output, int maxLineLength)
+    public void WriteOutput(Action<string> output)
     {
-        var twoLineMessagesFirstTextLengths = Messages
-            .Where(msg => msg.IsTwoLines)
-            .Select(msg => msg.Text1.Length)
-            .ToList()
-        ;
+        var twoPartMessagesFirstTextLength = Messages.Max(msg => msg.IfTwoPartsThenFirstPartLength);
 
-        var twoLineMessagesFirstTextLength = twoLineMessagesFirstTextLengths.Any()
-            ? twoLineMessagesFirstTextLengths.Max()
-            : 0
-        ;
-        foreach(var msg in Messages)
+        
+        foreach(var message in Messages)
         {
-            output(msg.ToString(twoLineMessagesFirstTextLength, maxLineLength));
+            message.WriteToOutput(output, twoPartMessagesFirstTextLength, maxLineLength);
         }
 
         // Reset Messages for future

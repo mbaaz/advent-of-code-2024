@@ -2,5 +2,5 @@
 
 public interface IDaySolutionImplementation : IDaySolutionDefinition
 {
-    public void Run(Action<string> output, int outputWidth, bool useTestInput);
+    public void Run(Action<OutputMessage> output, int outputWidth, bool useTestInput);
 }

@@ -55,7 +55,7 @@ public abstract class DaySolution(int day) : IDaySolutionDefinition
     public void Run(Action<OutputMessage> output, int outputWidth, bool useTestInput)
     {
         // Print top border
-        output($"{Environment.NewLine}{new string(BORDERED_OUTPUT_CHAR, outputWidth)}{Environment.NewLine}");
+        output(new($"{Environment.NewLine}{new string(BORDERED_OUTPUT_CHAR, outputWidth)}{Environment.NewLine}"));
         BorderedOutput("");
 
         // Print Welcome Message
@@ -68,10 +68,10 @@ public abstract class DaySolution(int day) : IDaySolutionDefinition
 
         // Print bottom border
         BorderedOutput("");
-        output($"{new string(BORDERED_OUTPUT_CHAR, outputWidth)}{Environment.NewLine}");
+        output(new($"{new string(BORDERED_OUTPUT_CHAR, outputWidth)}{Environment.NewLine}"));
         return;
 
-        void BorderedOutput(OutputMessage message, int indentLevel = 0) => OutputWithBorder(output, outputWidth, message, indentLevel);
+        void BorderedOutput(object message, int indentLevel = 0) => OutputWithBorder(output, outputWidth, message, indentLevel);
     }
 
     private void RunPart(PuzzlePart puzzlePart, Action<string, int> output, bool useTestInput)

@@ -52,7 +52,7 @@ Exception was thrown in solver:
 
     private static readonly Regex InputRegex = new(@"^(?<Exit>exit|[Xx])|(?<Day>[0-9]+)(?<UseTestInput>[Tt])?$");
 
-    public static void Output(string message)
+    public static void WriteOutput(string message)
     {
         Console.Write(message);
     }
@@ -65,15 +65,18 @@ Exception was thrown in solver:
 
         // Prepare output
         var outputWrapper = new OutputWrapper();
-        var output = outputWrapper.GetAddOutputAction();
+        var output = outputWrapper.AddMessage;
 
-        output(new(WELCOME_MESSAGE));
+        output(WELCOME_MESSAGE);
 
         var solverHelper = new SolverHelper();
 
         if(!solverHelper.HasSolvers)
         {
-            Output(NO_SOLVERS_ACTIVE_MESSAGE);
+            output(NO_SOLVERS_ACTIVE_MESSAGE);
+
+            outputWrapper.WriteOutput(WriteOutput, );
+
             Quit();
             return;
         }
@@ -157,11 +160,12 @@ Exception was thrown in solver:
 
     private static void Quit(bool bypassInput = false)
     {
-        Output(QUITTING_MESSAGE);
-
+        WriteOutput(QUITTING_MESSAGE);
+        
+        
         if(!bypassInput)
         {
-            Output(ENTER_KEY_TO_EXIT_MESSAGE);
+            WriteOutput(ENTER_KEY_TO_EXIT_MESSAGE);
             Console.ReadKey();
         }
     }
