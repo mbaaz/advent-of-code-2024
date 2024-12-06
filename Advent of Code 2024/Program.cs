@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace AoC.Y24;
+﻿namespace AoC.Y24;
 
 public static class Program
 {

@@ -54,7 +54,9 @@ Exception was thrown in solver:
 
     private OutputWrapper Output { get; }
     private SolverHelper SolverHelper { get; }
-    private string DefaultInput { get; }
+    
+    private readonly string _defaultInput;
+    private readonly string _greeting;
 
     public FestiveProgramRunner()
     {
@@ -62,11 +64,25 @@ Exception was thrown in solver:
         // Make maxLineLength smaller than window - otherwise if they match some consoles with omit NewLines at the end of input
         Output = new OutputWrapper(
             maxLineLength: Console.WindowWidth - 1, 
-            writer: Console.Write
+            writer: (line) => WriteOutput(line)
         );
 
         SolverHelper = new SolverHelper();
-        DefaultInput = $"{SolverHelper.LatestDayWithSolver}T";
+
+        _defaultInput = $"{SolverHelper.LatestDayWithSolver}T";
+        _greeting = string.Format(GREETING_FORMAT, SolverHelper.DefinedSolversHumanReadable, _defaultInput);
+    }
+
+    private static void WriteOutput(string line, bool endWithNewLine = true)
+    {
+        if(endWithNewLine)
+        {
+            Console.WriteLine(line);
+        }
+        else
+        {
+            Console.Write(line);
+        }
     }
 
     private bool PerformWelcomeChecks()
@@ -92,49 +108,50 @@ Exception was thrown in solver:
             return;
         }
 
-        
-
-        var greeting = string.Format(GREETING_FORMAT, SolverHelper.DefinedSolversHumanReadable, DefaultInput);
-        var @try = 0;
-
-        while (true)
-        {
-            if (@try > 0)
-            {
-                if (@try >= MAX_INPUT_TRIES)
-                {
-                    outputWrapper.AddMessage(INVALID_INPUT_QUITTING_MESSAGE);
-                    outputWrapper.Flush();
-
-                    Quit();
-                    return;
-                }
-
-                outputWrapper.AddMessage(INVALID_INPUT_TRY_AGAIN_MESSAGE);
-            }
-
-            var solverHasRun = HandleInput(outputWrapper, solverHelper, greeting, defaultInput, out var quit);
-            @try = solverHasRun ? 0 : @try + 1; // If solver has run - reset try count
-
-            if (quit)
-            {
-                return;
-            }
-        }
+        RunLoop();
     }
 
-    private bool HandleInput(string greeting, string defaultInput, out bool quit)
+    private void RunLoop(int failCount = 0)
     {
-        quit = false;
-        Output.AddMessage(greeting);
-
-        var dayToRunInput = Console.ReadLine() ?? defaultInput;
-        if (string.IsNullOrWhiteSpace(dayToRunInput))
+        if (failCount > 0)
         {
-            dayToRunInput = defaultInput;
+            if (failCount >= MAX_INPUT_TRIES)
+            {
+                Output.AddMessage(INVALID_INPUT_QUITTING_MESSAGE);
+                Output.Flush();
+
+                Quit();
+                return;
+            }
+
+            Output.AddMessage(INVALID_INPUT_TRY_AGAIN_MESSAGE);
         }
 
-        var match = InputRegex.Match(dayToRunInput);
+        var solverHasRun = HandleInput(out var quit);
+
+        if (quit)
+        {
+            return;
+        }
+        
+        // If solver has run - reset try count
+        RunLoop(solverHasRun ? 0 : failCount + 1);
+    }
+
+    private bool HandleInput(out bool quit)
+    {
+        quit = false;
+
+        Output.Flush();
+        WriteOutput(_greeting, endWithNewLine: false); // We need to do like this to make sure no line ending occurs after we wait for input
+
+        var input = Console.ReadLine();
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            input = _defaultInput;
+        }
+
+        var match = InputRegex.Match(input);
 
         if (match.Groups["Exit"].Success)
         {
@@ -154,7 +171,8 @@ Exception was thrown in solver:
 
             try
             {
-                solver.Run(Output, useTestInput);
+                Output.AddMessage($"{Environment.NewLine}{Environment.NewLine}");
+                solver.Run(Output.AddMessage, useTestInput);
                 Output.AddMessage($"{Environment.NewLine}{Environment.NewLine}");
             }
             catch (Exception ex)

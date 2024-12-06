@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using static AoC.Y24.days.Day03;
 
 namespace AoC.Y24.days;
 

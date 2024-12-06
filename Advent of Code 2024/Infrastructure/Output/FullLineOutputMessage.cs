@@ -1,4 +1,4 @@
-﻿namespace AoC.Y24.Infrastructure;
+﻿namespace AoC.Y24.Infrastructure.Output;
 
 public class FullLineOutputMessage : OutputMessage
 {
