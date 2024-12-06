@@ -5,12 +5,12 @@
 [DaySolution(Day = 17, IsActive = false)]
 public class Day17() : DaySolution(day: 17), IDaySolutionImplementation
 {
-    public override void RunPart1(string[] input, Action<OutputMessage> output)
+    public override void RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         output(new("Result", "[not yet defined]"));
     }
 
-    public override void RunPart2(string[] input, Action<OutputMessage> output)
+    public override void RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         output(new("Result", "[not yet defined]"));
     }

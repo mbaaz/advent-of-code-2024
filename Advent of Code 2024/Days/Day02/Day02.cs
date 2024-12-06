@@ -5,7 +5,7 @@
 [DaySolution(Day = 2, IsActive = true)]
 public class Day02() : DaySolution(day: 2), IDaySolutionImplementation
 {
-    public override void RunPart1(string[] input, Action<OutputMessage> output)
+    public override void RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var safeReports = input
             .Sum(row => IsSafeReport(GetValues(row)) ? 1 : 0)
@@ -14,7 +14,7 @@ public class Day02() : DaySolution(day: 2), IDaySolutionImplementation
         output(new("Number of safe reports", $"{safeReports:n0}"));
     }
 
-    public override void RunPart2(string[] input, Action<OutputMessage> output)
+    public override void RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var safeReports = input
             .Sum(row => IsSafeReport(GetValues(row), useProblemDampener: true) ? 1 : 0)

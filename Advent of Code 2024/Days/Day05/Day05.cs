@@ -7,7 +7,7 @@ namespace AoC.Y24.days;
 [DaySolution(Day = 5, IsActive = true)]
 public class Day05() : DaySolution(day: 5), IDaySolutionImplementation
 {
-    public override void RunPart1(string[] input, Action<OutputMessage> output)
+    public override void RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var (rules, updates) = ParseInput(input);
 
@@ -31,7 +31,7 @@ public class Day05() : DaySolution(day: 5), IDaySolutionImplementation
         output(new("Result", result));
     }
 
-    public override void RunPart2(string[] input, Action<OutputMessage> output)
+    public override void RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         output(new("Result", "[not yet defined]"));
     }
