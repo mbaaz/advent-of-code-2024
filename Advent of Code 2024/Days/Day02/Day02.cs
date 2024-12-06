@@ -5,34 +5,22 @@
 [DaySolution(Day = 2, IsActive = true)]
 public class Day02() : DaySolution(day: 2), IDaySolutionImplementation
 {
-    public override void RunPart1(string[] input, Action<string> output)
+    public override void RunPart1(string[] input, Action<OutputMessage> output)
     {
-        RunWithTimer(output, () =>
-        {
-            var safeReports = input
-                .Sum(row => IsSafeReport(GetValues(row)) ? 1 : 0)
-            ;
+        var safeReports = input
+            .Sum(row => IsSafeReport(GetValues(row)) ? 1 : 0)
+        ;
 
-            output($"""
-PART 1
-    Number of safe reports: {safeReports:n0}
-""");
-        });
+        output(new("Number of safe reports", $"{safeReports:n0}"));
     }
 
-    public override void RunPart2(string[] input, Action<string> output)
+    public override void RunPart2(string[] input, Action<OutputMessage> output)
     {
-        RunWithTimer(output, () =>
-        {
-            var safeReports = input
-                .Sum(row => IsSafeReport(GetValues(row), useProblemDampener: true) ? 1 : 0)
-            ;
+        var safeReports = input
+            .Sum(row => IsSafeReport(GetValues(row), useProblemDampener: true) ? 1 : 0)
+        ;
 
-            output($"""
-PART 2
-    Number of safe reports with Problem Dampener active: {safeReports:n0}
-""");
-        });
+        output(new("Number of safe reports with Problem Dampener active", $"{safeReports:n0}"));
     }
 
     // ########################################################################################

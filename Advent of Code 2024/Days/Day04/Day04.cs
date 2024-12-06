@@ -5,38 +5,26 @@
 [DaySolution(Day = 4, IsActive = true)]
 public class Day04() : DaySolution(day: 4), IDaySolutionImplementation
 {
-    public override void RunPart1(string[] input, Action<string> output)
+    public override void RunPart1(string[] input, Action<OutputMessage> output)
     {
-        RunWithTimer(output, () =>
-        {
-            var grid = new WordSearchGrid(input);
-            
-            var xmasOccurrences = grid.CalculateXmasOccurrences();
-
-            output($"""
-PART 1
-         rows: {grid.Rows}
-      columns: {grid.Columns}
-       XMAS occurs this many times: {xmasOccurrences:n0} 
-""");
-        });
+        var grid = new WordSearchGrid(input);
+        var xmasOccurrences = grid.CalculateXmasOccurrences();
+        
+        output(new("Rows", grid.Rows));
+        output(new("Columns", grid.Columns));
+        output(new("XMAS occurs this many times", $"{xmasOccurrences:n0}"));
     }
 
-    public override void RunPart2(string[] input, Action<string> output)
+    public override void RunPart2(string[] input, Action<OutputMessage> output)
     {
-        RunWithTimer(output, () =>
-        {
-            var grid = new WordSearchGrid(input);
+        var grid = new WordSearchGrid(input);
 
-            var crossMasOccurrences = grid.CalculateCrossMasOccurrences();
+        var crossMasOccurrences = grid.CalculateCrossMasOccurrences();
 
-            output($"""
-PART 2
-         rows: {grid.Rows}
-      columns: {grid.Columns}
-       X-MAS occurs this many times: {crossMasOccurrences:n0} 
-""");
-        });
+        output(new("Rows", grid.Rows));
+        output(new("Columns", grid.Columns));
+        output(new("X-MAS occurs this many times", $"{crossMasOccurrences:n0}"));
+        output(new("Test", "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ"));
     }
 
     // ########################################################################################

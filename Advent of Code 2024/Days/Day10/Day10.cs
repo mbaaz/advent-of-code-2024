@@ -5,29 +5,16 @@
 [DaySolution(Day = 10, IsActive = false)]
 public class Day10() : DaySolution(day: 10), IDaySolutionImplementation
 {
-    public override void RunPart1(string[] input, Action<string> output)
+    public override void RunPart1(string[] input, Action<OutputMessage> output)
     {
-        RunWithTimer(output, () =>
-        {
-
-            output($"""
-PART 1
-    result: [not yet defined!] 
-""");
-        });
+        output(new("Result", "[not yet defined]"));
     }
 
-    public override void RunPart2(string[] input, Action<string> output)
+    public override void RunPart2(string[] input, Action<OutputMessage> output)
     {
-        RunWithTimer(output, () =>
-        {
-
-            output($"""
-PART 2
-    result: [not yet defined!] 
-""");
-        });
+        output(new("Result", "[not yet defined]"));
     }
 
     // ########################################################################################
+
 }
