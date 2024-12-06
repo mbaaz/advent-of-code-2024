@@ -7,7 +7,7 @@ namespace AoC.Y24.days;
 [DaySolution(Day = 3, IsActive = true)]
 public class Day03() : DaySolution(day: 3), IDaySolutionImplementation
 {
-    public override void RunPart1(string[] input, Action<OutputMessage> output)
+    public override void RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var multiplyInstructions = input.SelectMany(GetMultiplyInstructions).ToList();
         var multiplicationSum = multiplyInstructions.Sum(instruction => instruction.GetProduct());
@@ -16,7 +16,7 @@ public class Day03() : DaySolution(day: 3), IDaySolutionImplementation
         output(new("Sum of multiplications", $"{multiplicationSum:n0}"));
     }
 
-    public override void RunPart2(string[] input, Action<OutputMessage> output)
+    public override void RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var instructions = input.SelectMany(GetEnhancedInstructions).ToList();
 

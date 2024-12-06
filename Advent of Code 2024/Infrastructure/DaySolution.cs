@@ -69,8 +69,8 @@ public abstract class DaySolution(int day) : IDaySolutionDefinition
         
         var executionTime = puzzlePart switch
         {
-            PuzzlePart.Part1 => RunWithTimer(() => RunPart1(input, IndentedOutput)),
-            PuzzlePart.Part2 => RunWithTimer(() => RunPart2(input, IndentedOutput)),
+            PuzzlePart.Part1 => RunWithTimer(() => RunPart1(useTestInput, input, IndentedOutput)),
+            PuzzlePart.Part2 => RunWithTimer(() => RunPart2(useTestInput, input, IndentedOutput)),
             _ => throw new ArgumentOutOfRangeException(nameof(puzzlePart), puzzlePart, null)
         };
 
@@ -87,12 +87,12 @@ public abstract class DaySolution(int day) : IDaySolutionDefinition
         void IndentedOutput(OutputMessage message) => output(new IndentedOutputMessage(message));
     }
 
-    public virtual void RunPart1(string[] input, Action<OutputMessage> output)
+    public virtual void RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         output(new("Puzzle Solver has not yet implemented [RunPart1] method!"));
     }
 
-    public virtual void RunPart2(string[] input, Action<OutputMessage> output)
+    public virtual void RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         output(new("Puzzle Solver has not yet implemented [RunPart2] method!"));
     }

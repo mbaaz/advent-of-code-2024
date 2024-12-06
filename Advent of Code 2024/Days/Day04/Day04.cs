@@ -5,7 +5,7 @@
 [DaySolution(Day = 4, IsActive = true)]
 public class Day04() : DaySolution(day: 4), IDaySolutionImplementation
 {
-    public override void RunPart1(string[] input, Action<OutputMessage> output)
+    public override void RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var grid = new WordSearchGrid(input);
         var xmasOccurrences = grid.CalculateXmasOccurrences();
@@ -15,7 +15,7 @@ public class Day04() : DaySolution(day: 4), IDaySolutionImplementation
         output(new("XMAS occurs this many times", $"{xmasOccurrences:n0}"));
     }
 
-    public override void RunPart2(string[] input, Action<OutputMessage> output)
+    public override void RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var grid = new WordSearchGrid(input);
 

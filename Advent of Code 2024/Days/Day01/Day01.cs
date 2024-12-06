@@ -5,7 +5,7 @@
 [DaySolution(Day = 1, IsActive = true)]
 public class Day01() : DaySolution(day: 1), IDaySolutionImplementation
 {
-    public override void RunPart1(string[] input, Action<OutputMessage> output)
+    public override void RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var (list1, list2) = GetListsFromInput(input);
 
@@ -16,7 +16,7 @@ public class Day01() : DaySolution(day: 1), IDaySolutionImplementation
         output(new("Total difference is", $"{diff:n0}"));
     }
 
-    public override void RunPart2(string[] input, Action<OutputMessage> output)
+    public override void RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var (list1, list2) = GetListsFromInput(input);
 
