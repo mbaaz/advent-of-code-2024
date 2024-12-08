@@ -7,14 +7,23 @@ public class Day15() : DaySolution(day: 15), IDaySolutionImplementation
 {
     public override void RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
+        var data = input.ParseToDay15Data();
+
         output(new("Result", "[not yet defined]"));
     }
 
     public override void RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
+        var data = input.ParseToDay15Data();
+
         output(new("Result", "[not yet defined]"));
     }
+}
 
-    // ########################################################################################
-
+public static class Day15Extensions
+{
+    public static List<string> ParseToDay15Data(this string[] input)
+    {
+        return input.ToList();
+    }
 }
