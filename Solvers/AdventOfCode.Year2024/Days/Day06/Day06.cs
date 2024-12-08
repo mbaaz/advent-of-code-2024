@@ -7,14 +7,23 @@ public class Day06() : DaySolution(day: 6), IDaySolutionImplementation
 {
     public override void RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
+        var data = input.ParseToDay06Data();
+
         output(new("Result", "[not yet defined]"));
     }
 
     public override void RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
+        var data = input.ParseToDay06Data();
+
         output(new("Result", "[not yet defined]"));
     }
+}
 
-    // ########################################################################################
-
+public static class Day06Extensions
+{
+    public static List<string> ParseToDay06Data(this string[] input)
+    {
+        return input.ToList();
+    }
 }
