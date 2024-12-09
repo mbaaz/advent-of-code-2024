@@ -9,7 +9,7 @@ public static class Program
         Console.WindowHeight = 60;
 
         // Start the Festive Program Runner
-        var festiveRunner = new FestiveProgramRunner();
+        var festiveRunner = new FestiveProgramRunner(2024);
         festiveRunner.Run();
     }
 }

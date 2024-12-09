@@ -6,11 +6,13 @@ public class FestiveProgramRunner
 {
     private const int MAX_INPUT_TRIES = 3;
 
+    private string GetWelcomeMessage() => string.Format(WELCOME_MESSAGE, Year);
     private const string WELCOME_MESSAGE = """
-Welcome to Advent of Code 2024!
+Welcome to Advent of Code {0}!
 
 
 """;
+
     private const string NO_SOLVERS_ACTIVE_MESSAGE = """
 No solvers are active yet - if you would attempt any puzzle first
 (and mark as active) then please come back again soon to try me!
@@ -58,12 +60,15 @@ Exception was thrown in solver:
     private readonly string _defaultInput;
     private readonly string _greeting;
 
-    public FestiveProgramRunner()
+    private readonly int Year;
+
+    public FestiveProgramRunner(int year)
     {
+        Year = year;
+
         // Prepare output
-        // Make maxLineLength smaller than window - otherwise if they match some consoles with omit NewLines at the end of input
         Output = new OutputWrapper(
-            maxLineLength: Console.WindowWidth - 1,
+            maxLineLength: Console.WindowWidth - 1,  // Make maxLineLength smaller than window - otherwise if they match, some consoles with omit NewLines at the end of line
             writer: (line) => WriteOutput(line)
         );
 
@@ -87,7 +92,7 @@ Exception was thrown in solver:
 
     private bool PerformWelcomeChecks()
     {
-        Output.AddMessage(WELCOME_MESSAGE);
+        Output.AddMessage(GetWelcomeMessage());
 
         if (SolverHelper.HasSolvers)
         {
