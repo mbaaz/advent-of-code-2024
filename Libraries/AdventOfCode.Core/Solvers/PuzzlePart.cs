@@ -1,4 +1,4 @@
-﻿namespace MBZ.AdventOfCode.Core;
+﻿namespace MBZ.AdventOfCode.Core.Solvers;
 
 public enum PuzzlePart : short
 {

@@ -1,11 +1,14 @@
-﻿namespace MBZ.AdventOfCode.Year2024.Day05;
+﻿using MBZ.AdventOfCode.Core.Solvers;
+
+namespace MBZ.AdventOfCode.Year2024.Day05;
 
 // This is my solution to the Advent of Code challenge!
 // <see>https://adventofcode.com/2024/day/5</see>
 [DaySolution(Day = 5, IsActive = true)]
 public class Day05() : DaySolution(day: 5), IDaySolutionImplementation
 {
-    public override void RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
+    [ExpectedResult(testResult: 143, result: 4814)]
+    public override int RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var (rules, updates) = input.ParseToDay05Data();
 
@@ -24,9 +27,11 @@ public class Day05() : DaySolution(day: 5), IDaySolutionImplementation
 
         var result = correctUpdates.Sum(update => update.GetMiddlePage());
         output(new("Result", $"{result:n0}"));
+        return result;
     }
 
-    public override void RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
+    [ExpectedResult(testResult: 123, result: 5448)]
+    public override int RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var (rules, updates) = input.ParseToDay05Data();
         var incorrectUpdates = updates.Where(rules.IsNotValidUpdate).Select(upd => new { Invalid = upd, Fixed = rules.FixIncorrectUpdate(upd) }).ToList();
@@ -41,5 +46,6 @@ public class Day05() : DaySolution(day: 5), IDaySolutionImplementation
 
         var result = incorrectUpdates.Sum(update => update.Fixed.GetMiddlePage());
         output(new("Result", $"{result:n0}"));
+        return result;
     }
 }

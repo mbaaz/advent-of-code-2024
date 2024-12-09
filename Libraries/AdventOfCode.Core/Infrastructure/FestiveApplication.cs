@@ -2,70 +2,19 @@
 
 namespace MBZ.AdventOfCode.Core.Infrastructure;
 
-public class FestiveProgramRunner
+public class FestiveApplication
 {
     private const int MAX_INPUT_TRIES = 3;
-
-    private string GetWelcomeMessage() => string.Format(WELCOME_MESSAGE, Year);
-    private const string WELCOME_MESSAGE = """
-Welcome to Advent of Code {0}!
-
-
-""";
-
-    private const string NO_SOLVERS_ACTIVE_MESSAGE = """
-No solvers are active yet - if you would attempt any puzzle first
-(and mark as active) then please come back again soon to try me!
-
-
-""";
-    private const string QUITTING_MESSAGE = """
-
-Thanks for this time!
-
-""";
-    private const string ENTER_KEY_TO_EXIT_MESSAGE = "Press any key to exit: ";
-    private const string GREETING_FORMAT = """
-Solvers for the following days puzzles are defined: {0}
-To use test input rather than puzzle input, suffix input with [Tt].
-Enter "exit" or [Xx] to quit.
-Which day do you wish to run? [{1}]: 
-""";
-
-
-    private const string INVALID_INPUT_TRY_AGAIN_MESSAGE = """
-Invalid input. Try again...
-
-
-""";
-    private const string INVALID_INPUT_QUITTING_MESSAGE = """
-Invalid input.
-Maximum number of invalid tries reached, quitting!
-
-
-""";
-
-    private const string SOLVER_EXCEPTION_MESSAGE_FORMAT = """
-Exception was thrown in solver:
-    {0}
-
-
-""";
 
     private static readonly Regex InputRegex = new(@"^(?<Exit>exit|[Xx])|(?<Day>[0-9]+)(?<UseTestInput>[Tt])?$");
 
     private OutputWrapper Output { get; }
     private SolverHelper SolverHelper { get; }
+    private string DefaultInput { get; }
+    private IServiceProvider? Services { get; set; }
 
-    private readonly string _defaultInput;
-    private readonly string _greeting;
-
-    private readonly int Year;
-
-    public FestiveProgramRunner(int year)
+    public FestiveApplication()
     {
-        Year = year;
-
         // Prepare output
         Output = new OutputWrapper(
             maxLineLength: Console.WindowWidth - 1,  // Make maxLineLength smaller than window - otherwise if they match, some consoles with omit NewLines at the end of line
@@ -74,8 +23,27 @@ Exception was thrown in solver:
 
         SolverHelper = new SolverHelper();
 
-        _defaultInput = $"{SolverHelper.LatestDayWithSolver}T";
-        _greeting = string.Format(GREETING_FORMAT, SolverHelper.DefinedSolversHumanReadable, _defaultInput);
+        DefaultInput = $"{SolverHelper.LatestDayWithSolver}T";
+    }
+
+    public void Setup(IServiceProvider serviceProvider)
+    {
+        Services = serviceProvider;
+    }
+
+    public void Run()
+    {
+        if(Services == null)
+        {
+            throw new Exception("FestiveApplication has not been Setup!");
+        }
+
+        if (!PerformWelcomeChecks())
+        {
+            return;
+        }
+
+        RunLoop();
     }
 
     private static void WriteOutput(string line, bool endWithNewLine = true)
@@ -92,28 +60,18 @@ Exception was thrown in solver:
 
     private bool PerformWelcomeChecks()
     {
-        Output.AddMessage(GetWelcomeMessage());
+        Output.AddMessage(StringResources.GetWelcomeMessage(2024));
 
         if (SolverHelper.HasSolvers)
         {
             return true;
         }
 
-        Output.AddMessage(NO_SOLVERS_ACTIVE_MESSAGE);
+        Output.AddMessage(StringResources.NO_SOLVERS_ACTIVE_MESSAGE);
         Output.Flush();
 
         Quit();
         return false;
-    }
-
-    public void Run()
-    {
-        if (!PerformWelcomeChecks())
-        {
-            return;
-        }
-
-        RunLoop();
     }
 
     private void RunLoop(int failCount = 0)
@@ -122,14 +80,14 @@ Exception was thrown in solver:
         {
             if (failCount >= MAX_INPUT_TRIES)
             {
-                Output.AddMessage(INVALID_INPUT_QUITTING_MESSAGE);
+                Output.AddMessage(StringResources.INVALID_INPUT_QUITTING_MESSAGE);
                 Output.Flush();
 
                 Quit();
                 return;
             }
 
-            Output.AddMessage(INVALID_INPUT_TRY_AGAIN_MESSAGE);
+            Output.AddMessage(StringResources.INVALID_INPUT_TRY_AGAIN_MESSAGE);
         }
 
         var solverHasRun = HandleInput(out var quit);
@@ -148,12 +106,12 @@ Exception was thrown in solver:
         quit = false;
 
         Output.Flush();
-        WriteOutput(_greeting, endWithNewLine: false); // We need to do like this to make sure no line ending occurs after we wait for input
+        WriteOutput(StringResources.GetGreeting(SolverHelper.DefinedSolversHumanReadable, DefaultInput), endWithNewLine: false); // We need to do like this to make sure no line ending occurs after we wait for input
 
         var input = Console.ReadLine();
         if (string.IsNullOrWhiteSpace(input))
         {
-            input = _defaultInput;
+            input = DefaultInput;
         }
 
         var match = InputRegex.Match(input);
@@ -182,7 +140,7 @@ Exception was thrown in solver:
             }
             catch (Exception ex)
             {
-                Output.AddMessage(string.Format(SOLVER_EXCEPTION_MESSAGE_FORMAT, ex.Message));
+                Output.AddMessage(string.Format(StringResources.SOLVER_EXCEPTION_MESSAGE_FORMAT, ex.Message));
             }
 
             return true;
@@ -193,11 +151,11 @@ Exception was thrown in solver:
 
     private static void Quit(bool bypassInput = false)
     {
-        Console.Write(QUITTING_MESSAGE);
+        Console.Write(StringResources.QUITTING_MESSAGE);
 
         if (!bypassInput)
         {
-            Console.Write(ENTER_KEY_TO_EXIT_MESSAGE);
+            Console.Write(StringResources.ENTER_KEY_TO_EXIT_MESSAGE);
             Console.ReadKey();
         }
     }

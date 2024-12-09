@@ -1,22 +1,28 @@
-﻿namespace MBZ.AdventOfCode.Year2024.Day10;
+﻿using MBZ.AdventOfCode.Core.Solvers;
+
+namespace MBZ.AdventOfCode.Year2024.Day10;
 
 // This is my solution to the Advent of Code challenge!
 // <see>https://adventofcode.com/2024/day/10</see>
 [DaySolution(Day = 10, IsActive = false)]
 public class Day10() : DaySolution(day: 10), IDaySolutionImplementation
 {
-    public override void RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
+    [ExpectedResult(testResult: int.MaxValue, result: int.MaxValue)]
+    public override int RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var data = input.ParseToDay10Data();
 
         output(new("Result", "[not yet defined]"));
+        return -1;
     }
 
-    public override void RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
+    [ExpectedResult(testResult: int.MaxValue, result: int.MaxValue)]
+    public override int RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var data = input.ParseToDay10Data();
 
         output(new("Result", "[not yet defined]"));
+        return -1;
     }
 }
 

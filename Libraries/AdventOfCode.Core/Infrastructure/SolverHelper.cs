@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text;
+using MBZ.AdventOfCode.Core.Solvers;
 
 namespace MBZ.AdventOfCode.Core.Infrastructure;
 

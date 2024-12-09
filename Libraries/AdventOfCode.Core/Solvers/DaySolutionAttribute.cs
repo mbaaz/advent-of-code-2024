@@ -1,4 +1,4 @@
-﻿namespace MBZ.AdventOfCode.Core;
+﻿namespace MBZ.AdventOfCode.Core.Solvers;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class DaySolutionAttribute : Attribute
