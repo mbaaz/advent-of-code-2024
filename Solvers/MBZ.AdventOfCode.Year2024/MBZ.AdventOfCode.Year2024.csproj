@@ -13,6 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\MBZ.AdventOfCode.Core\MBZ.AdventOfCode.Core.csproj" />
+    <ProjectReference Include="..\..\MBZ.AdventureOfCode.Aardward\MBZ.AdventOfCode.Aardward.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Days\Day01\day01-input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -166,10 +171,6 @@
     <None Update="Days\Day25\Day25-test.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\AdventOfCode.Core\AdventOfCode.Core.csproj" />
   </ItemGroup>
 
 </Project>

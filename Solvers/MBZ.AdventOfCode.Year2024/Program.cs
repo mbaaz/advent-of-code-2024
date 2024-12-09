@@ -10,20 +10,21 @@ public static class Program
         // Build services (DI)
         var services = CreateServices();
 
-        // Prepare Console
-        Console.WindowWidth = 150;
-        Console.WindowHeight = 60;
-
         // Fetch and run application
-        var festiveApp = services.GetRequiredService<FestiveApplication>();
+        var festiveApp = services.GetRequiredService<IFestiveApplication>();
         festiveApp.Setup(services);
-        festiveApp.Run();
+
+        var test = new MBZ.AdventOfCode.Aardward.Class1();
+
+        Console.Write("Press any key to exit: ");
+        Console.ReadKey();
     }
 
     private static ServiceProvider CreateServices()
     {
         var serviceCollection = new ServiceCollection()
-            .AddSingleton<FestiveApplication>(new FestiveApplication())
+            .AddFestiveApplication(new FestiveApplication())
+            .ConfigureFestiveAppStartup()
         ;
 
 

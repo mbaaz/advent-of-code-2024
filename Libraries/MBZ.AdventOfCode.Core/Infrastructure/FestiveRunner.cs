@@ -2,7 +2,7 @@
 
 namespace MBZ.AdventOfCode.Core.Infrastructure;
 
-public class FestiveApplication
+public class FestiveRunner : IFestiveRunner
 {
     private const int MAX_INPUT_TRIES = 3;
 
@@ -11,9 +11,8 @@ public class FestiveApplication
     private OutputWrapper Output { get; }
     private SolverHelper SolverHelper { get; }
     private string DefaultInput { get; }
-    private IServiceProvider? Services { get; set; }
-
-    public FestiveApplication()
+    
+    public FestiveRunner()
     {
         // Prepare output
         Output = new OutputWrapper(
@@ -26,18 +25,8 @@ public class FestiveApplication
         DefaultInput = $"{SolverHelper.LatestDayWithSolver}T";
     }
 
-    public void Setup(IServiceProvider serviceProvider)
-    {
-        Services = serviceProvider;
-    }
-
     public void Run()
     {
-        if(Services == null)
-        {
-            throw new Exception("FestiveApplication has not been Setup!");
-        }
-
         if (!PerformWelcomeChecks())
         {
             return;
