@@ -3,4 +3,5 @@
 public interface IFestiveApplication
 {
     void Setup(IServiceProvider serviceProvider);
+    Task Run();
 }

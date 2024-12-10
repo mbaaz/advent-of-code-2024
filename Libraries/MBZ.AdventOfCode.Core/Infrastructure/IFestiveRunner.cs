@@ -2,5 +2,5 @@
 
 public interface IFestiveRunner
 {
-    void Run();
+    Task Run();
 }

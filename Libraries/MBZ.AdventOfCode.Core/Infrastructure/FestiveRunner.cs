@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using MBZ.AdventOfCode.Core.Configuration;
 
 namespace MBZ.AdventOfCode.Core.Infrastructure;
 
@@ -8,11 +9,16 @@ public class FestiveRunner : IFestiveRunner
 
     private static readonly Regex InputRegex = new(@"^(?<Exit>exit|[Xx])|(?<Day>[0-9]+)(?<UseTestInput>[Tt])?$");
 
-    private OutputWrapper Output { get; }
+    private FestiveAppSettings AppSettings { get; }
     private SolverHelper SolverHelper { get; }
+
+    private OutputWrapper Output { get; }
     private string DefaultInput { get; }
     
-    public FestiveRunner()
+    public FestiveRunner(
+        FestiveAppSettings appSettings,
+        SolverHelper solverHelper
+    )
     {
         // Prepare output
         Output = new OutputWrapper(
@@ -20,19 +26,24 @@ public class FestiveRunner : IFestiveRunner
             writer: (line) => WriteOutput(line)
         );
 
-        SolverHelper = new SolverHelper();
+        AppSettings = appSettings;
+        SolverHelper = solverHelper;
 
         DefaultInput = $"{SolverHelper.LatestDayWithSolver}T";
     }
 
-    public void Run()
+    public async Task Run()
     {
         if (!PerformWelcomeChecks())
         {
             return;
         }
 
-        RunLoop();
+        var prevLoopResult = new LoopResult();
+        while(!prevLoopResult.Quit)
+        {
+            prevLoopResult = await RunLoop(prevLoopResult.FailCount);
+        }
     }
 
     private static void WriteOutput(string line, bool endWithNewLine = true)
@@ -49,7 +60,7 @@ public class FestiveRunner : IFestiveRunner
 
     private bool PerformWelcomeChecks()
     {
-        Output.AddMessage(StringResources.GetWelcomeMessage(2024));
+        Output.AddMessage(StringResources.GetWelcomeMessage(AppSettings.Year));
 
         if (SolverHelper.HasSolvers)
         {
@@ -63,7 +74,7 @@ public class FestiveRunner : IFestiveRunner
         return false;
     }
 
-    private void RunLoop(int failCount = 0)
+    private async Task<LoopResult> RunLoop(int failCount)
     {
         if (failCount > 0)
         {
@@ -73,27 +84,24 @@ public class FestiveRunner : IFestiveRunner
                 Output.Flush();
 
                 Quit();
-                return;
+                return new LoopResult(Quit: true);
             }
 
             Output.AddMessage(StringResources.INVALID_INPUT_TRY_AGAIN_MESSAGE);
         }
 
-        var solverHasRun = HandleInput(out var quit);
+        var result = await HandleInput();
 
-        if (quit)
+        return result switch
         {
-            return;
-        }
-
-        // If solver has run - reset try count
-        RunLoop(solverHasRun ? 0 : failCount + 1);
+            { Quit: true } => new LoopResult(Quit: true),
+            { TaskHasRun: false } => new LoopResult(FailCount: failCount + 1),
+            _ => new LoopResult()
+        };
     }
 
-    private bool HandleInput(out bool quit)
+    private async Task<InputResult> HandleInput()
     {
-        quit = false;
-
         Output.Flush();
         WriteOutput(StringResources.GetGreeting(SolverHelper.DefinedSolversHumanReadable, DefaultInput), endWithNewLine: false); // We need to do like this to make sure no line ending occurs after we wait for input
 
@@ -108,8 +116,7 @@ public class FestiveRunner : IFestiveRunner
         if (match.Groups["Exit"].Success)
         {
             Quit(bypassInput: true);
-            quit = true;
-            return false;
+            return new InputResult(Quit: true);
         }
 
         if (match.Groups["Day"].Success)
@@ -119,12 +126,14 @@ public class FestiveRunner : IFestiveRunner
 
             var solver = SolverHelper.GetSolverForDay(dayToRun);
             if (solver == null)
-                return false;
+            {
+                return new InputResult();
+            }
 
             try
             {
                 Output.AddMessage($"{Environment.NewLine}{Environment.NewLine}");
-                solver.Run(Output.AddMessage, useTestInput);
+                await solver.Run(Output.AddMessage, useTestInput);
                 Output.AddMessage($"{Environment.NewLine}{Environment.NewLine}");
             }
             catch (Exception ex)
@@ -132,10 +141,10 @@ public class FestiveRunner : IFestiveRunner
                 Output.AddMessage(string.Format(StringResources.SOLVER_EXCEPTION_MESSAGE_FORMAT, ex.Message));
             }
 
-            return true;
+            return new InputResult(TaskHasRun: true);
         }
 
-        return false;
+        return new InputResult();
     }
 
     private static void Quit(bool bypassInput = false)
@@ -148,4 +157,7 @@ public class FestiveRunner : IFestiveRunner
             Console.ReadKey();
         }
     }
+
+    private record InputResult(bool TaskHasRun = false, bool Quit = false) {}
+    private record LoopResult(int FailCount = 0, bool Quit = false) {}
 }

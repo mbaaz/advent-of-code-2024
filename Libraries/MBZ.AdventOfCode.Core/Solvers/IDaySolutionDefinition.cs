@@ -2,5 +2,4 @@
 
 public interface IDaySolutionDefinition
 {
-    public int Day { get; }
 }

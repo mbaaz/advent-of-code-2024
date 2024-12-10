@@ -5,7 +5,7 @@ namespace MBZ.AdventOfCode.Year2024.Day03;
 // This is my solution to the Advent of Code challenge!
 // <see>https://adventofcode.com/2024/day/3</see>
 [DaySolution(Day = 3, IsActive = true)]
-public class Day03() : DaySolution(day: 3), IDaySolutionImplementation
+public class Day03 : DaySolution, IDaySolutionImplementation
 {
     [ExpectedResult(testResult: 161, result: 161085926)]
     public override int RunPart1(bool isTest, string[] input, Action<OutputMessage> output)

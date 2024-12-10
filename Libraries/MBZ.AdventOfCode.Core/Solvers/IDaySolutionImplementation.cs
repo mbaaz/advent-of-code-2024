@@ -2,5 +2,5 @@
 
 public interface IDaySolutionImplementation : IDaySolutionDefinition
 {
-    public void Run(Action<OutputMessage> output, bool useTestInput);
+    Task Run(Action<OutputMessage> output, bool useTestInput);
 }

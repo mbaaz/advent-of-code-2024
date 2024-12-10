@@ -1,16 +1,28 @@
-﻿using MBZ.AdventOfCode.Core.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
+﻿using MBZ.AdventOfCode.Core.Configuration;
+using MBZ.AdventOfCode.Core.Infrastructure;
+using MBZ.AdventOfCode.Core.Input;
+using Microsoft.Extensions.Configuration;
 
 namespace MBZ.AdventOfCode.Core;
 
-public class AppStartup : IAppStartup
+public class AppStartup : AppStartupBase, IAppStartup
 {
-    public void ConfigureServices(IServiceCollection services)
+    public override IConfigurationBuilder ConfigureSettings(IConfigurationBuilder configurationBuilder)
     {
-        
+        return configurationBuilder
+            .AddUserSecrets<FestiveApplication>()  // Register User Secrets
+        ;
     }
 
-    public void Configure(IServiceProvider services)
+    public override void ConfigureServices(IServiceCollection services)
+    {
+        services.AddSingleton<IFestiveApplication, FestiveApplication>();
+        services.AddTransient<IFestiveRunner, FestiveRunner>();
+        services.AddTransient<SolverHelper>();
+        services.AddTransient<InputHelper>();
+    }
+
+    public override void Configure(IServiceProvider services)
     {
         
     }

@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using MBZ.AdventOfCode.Core.Infrastructure;
 using MBZ.AdventOfCode.Core.Input;
 
 namespace MBZ.AdventOfCode.Core.Solvers;
 
-public abstract class DaySolution(int day) : IDaySolutionDefinition
+public abstract class DaySolution : IDaySolutionDefinition
 {
     private const string TEST_ACTIVE_WARNING = " - RUNNING WITH TEST DATA ACTIVE";
     private const string WELCOME_MESSAGE_FORMAT = "Welcome to Day {0}!";
@@ -13,12 +14,27 @@ public abstract class DaySolution(int day) : IDaySolutionDefinition
 
     private const char BORDERED_OUTPUT_CHAR = '#';
 
-    public int Day { get; } = day;
+    private int Day { get; }
+    private InputHelper InputHelper { get; }
 
     protected string GetWelcomeMessage(bool useTestInput) =>
         string.Format(WELCOME_MESSAGE_FORMAT, Day.ToString().PadLeft(2, '0')) + (useTestInput ? TEST_ACTIVE_WARNING : string.Empty);
 
-    public void Run(Action<OutputMessage> output, bool useTestInput)
+
+    protected DaySolution()
+    {
+        InputHelper = FestiveApplicationContext.Services.GetService<InputHelper>();
+
+        var attr = GetType().GetCustomAttribute<DaySolutionAttribute>();
+        if(attr == null)
+        {
+            throw new Exception($"""Day Solution "{GetType().Name}" is missing required DaySolutionAttribute!""");
+        }
+
+        Day = attr.Day;
+    }
+
+    public async Task Run(Action<OutputMessage> output, bool useTestInput)
     {
         // Print top border
         output(new FullLineOutputMessage(BORDERED_OUTPUT_CHAR));
@@ -28,8 +44,8 @@ public abstract class DaySolution(int day) : IDaySolutionDefinition
         BorderedOutput(new($"{GetWelcomeMessage(useTestInput)}"));
         
         // Run the puzzle parts
-        RunPart(PuzzlePart.Part1, IndentedOutput, useTestInput); // Run part 1
-        RunPart(PuzzlePart.Part2, IndentedOutput, useTestInput); // Run part 2
+        await RunPart(PuzzlePart.Part1, IndentedOutput, useTestInput); // Run part 1
+        await RunPart(PuzzlePart.Part2, IndentedOutput, useTestInput); // Run part 2
 
         // Print bottom border
         BorderedOutput(new(string.Empty));
@@ -41,18 +57,19 @@ public abstract class DaySolution(int day) : IDaySolutionDefinition
         void IndentedOutput(OutputMessage message) => output(GetBorderedMessage(new IndentedOutputMessage(message)));
     }
 
-    private void RunPart(PuzzlePart puzzlePart, Action<OutputMessage> output, bool useTestInput)
+    private async Task RunPart(PuzzlePart puzzlePart, Action<OutputMessage> output, bool useTestInput)
     {
         // Present the puzzle part that is executing
         output(new($"{Environment.NewLine}PART {(short)puzzlePart}"));
 
         // Prepare to run the puzzle part
-        var inputWrapper = InputHelper.GetInput(Day, puzzlePart, useTestInput);
+        var inputWrapper = await InputHelper.GetInput(Day, puzzlePart, useTestInput);
 
         // Write info about input data
         IndentedOutput(new(inputWrapper switch
         {
-            { IsEmpty: false } => $"""Using input from file "{inputWrapper.FileName}"!""",
+            { IsEmpty: false, IsFetched: false } => $"""Using input from file "{inputWrapper.FileName}"!""",
+            { IsEmpty: false, IsFetched: true } => $"""Using fetched input from website now stored to file "{inputWrapper.FileName}"!""",
             { IsEmpty: true, IsFetched: false } => $"""Input file "{inputWrapper.FileName}" is empty!""",
             { IsEmpty: true, IsFetched: true }  => $"""Input file "{inputWrapper.FileName}" is empty - tried to load from website but apparently failed (check sessionID possibly)!""",
             _ => throw new UnreachableException("Input wrapper should not ever be in this state!")
@@ -121,9 +138,9 @@ public abstract class DaySolution(int day) : IDaySolutionDefinition
         return -1;
     }
 
-    private TimeSpan RunWithTimer(int expectedResult, Func<int> codeToTime, Action<PostPuzzleSolverRunResult> HandleResult, Action<Exception> handleException)
+    private static TimeSpan RunWithTimer(int expectedResult, Func<int> codeToTime, Action<PostPuzzleSolverRunResult> handleResult, Action<Exception> handleException)
     {
-        var watch = System.Diagnostics.Stopwatch.StartNew();
+        var watch = Stopwatch.StartNew();
 
         try
         {
@@ -131,7 +148,7 @@ public abstract class DaySolution(int day) : IDaySolutionDefinition
             watch.Stop();
 
             var postRunResult = new PostPuzzleSolverRunResult(expectedResult, result);
-            HandleResult(postRunResult);
+            handleResult(postRunResult);
         }
         catch(Exception ex)
         {

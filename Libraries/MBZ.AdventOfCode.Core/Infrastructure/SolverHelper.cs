@@ -6,13 +6,17 @@ namespace MBZ.AdventOfCode.Core.Infrastructure;
 
 public class SolverHelper
 {
+    private readonly ITypeFinder _typeFinder;
+
     private IDictionary<int, Type> Solvers { get; }
     public string DefinedSolversHumanReadable { get; }
     public bool HasSolvers => Solvers.Any();
     public int LatestDayWithSolver { get; }
 
-    public SolverHelper()
+    public SolverHelper(ITypeFinder typeFinder)
     {
+        _typeFinder = typeFinder;
+
         Solvers = GetSolvers();
         DefinedSolversHumanReadable = GetDefinedSolverForDays(Solvers.Keys);
 
@@ -30,9 +34,9 @@ public class SolverHelper
         return solver;
     }
 
-    private static IDictionary<int, Type> GetSolvers()
+    private IDictionary<int, Type> GetSolvers()
     {
-        var solverTypes = GetSolverTypes();
+        var solverTypes = _typeFinder.FindClassesOfType<IDaySolutionImplementation>();
 
         var solverTypesDictionary = new Dictionary<int, Type>();
         foreach (var solverType in solverTypes)
@@ -48,21 +52,6 @@ public class SolverHelper
         }
 
         return solverTypesDictionary;
-    }
-
-    private static IEnumerable<Type> GetSolverTypes()
-    {
-        var solverType = typeof(IDaySolutionImplementation);
-        var assembly = Assembly.GetEntryAssembly();
-        var allTypes = assembly.GetTypes();
-        var types = allTypes
-            .Where(type =>
-                solverType.IsAssignableFrom(type) &&
-                type is { IsInterface: false, IsClass: true, IsAbstract: false }
-            )
-            .ToList()
-        ;
-        return types;
     }
 
     private static string GetDefinedSolverForDays(IEnumerable<int> keysInput)

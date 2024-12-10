@@ -1,11 +1,13 @@
 ﻿using System.Text;
+using MBZ.AdventOfCode.Core.Configuration;
+using MBZ.AdventOfCode.Core.Infrastructure;
 using MBZ.AdventOfCode.Core.Solvers;
 
 namespace MBZ.AdventOfCode.Core.Input;
 
 public class InputHelper
 {
-    private const string INPUT_FILE_NAME_FORMAT = """Days\Day{0}\day{0}-{1}.{2}""";
+    private const string INPUT_FILE_NAME_FORMAT = """Days\Day{0}\Day{0}-{1}.{2}""";
     private const string INPUT_DATA_FILE_NAME = "input";
     private const string INPUT_TEST_FILE_NAME = "test";
     private const string INPUT_FILE_PART_SUFFIX = "-part";
@@ -25,21 +27,21 @@ public class InputHelper
     private static string[] ReadFile(FileInfo file) =>
         File.ReadAllLines(file.FullName);
 
-    public static PuzzleInputData GetInput(int day, PuzzlePart puzzlePart, bool useTestInput)
+    public async Task<PuzzleInputData> GetInput(int day, PuzzlePart puzzlePart, bool useTestInput)
     {
         var partSpecificFile = GetFileInfo(GetInputFilePath(day, puzzlePart, useTestInput));
-        if(partSpecificFile.Exists)
+        if(partSpecificFile is { Exists: true })
         {
             var content = ReadFile(partSpecificFile);
-            if(!content.All(string.IsNullOrWhiteSpace))
+            if(content.Length > 0 && !content.All(string.IsNullOrWhiteSpace))
                 return new PuzzleInputData(partSpecificFile.Name, content, false);
         }
         
         var genericFile = GetFileInfo(GetInputFilePath(day, null, useTestInput));
-        if(genericFile.Exists)
+        if(genericFile is { Exists: true })
         {
-            var content = ReadFile(partSpecificFile);
-            if (!content.All(string.IsNullOrWhiteSpace))
+            var content = ReadFile(genericFile);
+            if (content.Length > 0 && !content.All(string.IsNullOrWhiteSpace))
                 return new PuzzleInputData(genericFile.Name, content, false);
         }
 
@@ -51,24 +53,52 @@ public class InputHelper
 
         // OK, we need to try and load puzzle data!
         {
-            var onlineContent = FetchPuzzleDataOnline();
-            string[] content = [string.Empty];
-            if(!string.IsNullOrWhiteSpace(onlineContent))
+            var onlineContent = await FetchPuzzleDataOnline(day);
+            if (onlineContent.Length == 0 || onlineContent.All(string.IsNullOrWhiteSpace))
             {
-                // Write content to disk
-                File.WriteAllText(genericFile.FullName, onlineContent, Encoding.Latin1);
-
-                // Convert data to expected format
-                content = onlineContent.Split(Environment.NewLine, StringSplitOptions.TrimEntries);
+                return new PuzzleInputData(genericFile.Name, [string.Empty], true);
             }
 
+            // Write content to disk
+            var diskContent = string.Join(Environment.NewLine, onlineContent);
+            await File.WriteAllTextAsync(genericFile.FullName, diskContent, Encoding.Latin1);
+
             // Return data
-            return new PuzzleInputData(genericFile.Name, content, true);
+            return new PuzzleInputData(genericFile.Name, onlineContent, true);
         }
     }
 
-    private static string FetchPuzzleDataOnline()
+    private static async Task<string[]> FetchPuzzleDataOnline(int day)
     {
-        return string.Empty;
+        var appSettings = FestiveApplicationContext.Services.GetRequiredService<FestiveAppSettings>();
+        var websiteSettings = FestiveApplicationContext.Services.GetRequiredService<FestiveWebsiteSettings>();
+        var url = websiteSettings!.GetInputUrl(appSettings.Year, day);
+        var sessionID = websiteSettings.SessionID;
+
+        if(string.IsNullOrWhiteSpace(sessionID))
+        {
+            throw new Exception("Website Session ID is not set - You need to set the Session ID from a logged in session in a browser to the User Secret in Core project!");
+        }
+
+        using var stream = await GetInputFileStream(url, websiteSettings.SessionCookieName, websiteSettings.SessionID);
+        var input = ReadStream(stream).ToArray();
+
+        return input;
+    }
+
+    private static async Task<StreamReader> GetInputFileStream(string url, string sessionCookieName, string sessionID)
+    {
+        var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Add("cookie", $"{ sessionCookieName }={ sessionID }");
+        var stream = await httpClient.GetStreamAsync(url);
+        return new StreamReader(stream);
+    }
+
+    private static IEnumerable<string> ReadStream(StreamReader inputStream)
+    {
+        while (inputStream.ReadLine() is { } line)
+        {
+            yield return line;
+        }
     }
 }

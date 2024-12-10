@@ -12,4 +12,15 @@ public class FestiveApplication : IFestiveApplication
         Console.WindowWidth = 150;
         Console.WindowHeight = 60;
     }
+
+    public async Task Run()
+    {
+        if(Services == null)
+        {
+            throw new Exception("Cannot run festive application - Setup has not been called!");
+        }
+
+        var festiveRunner = Services.GetRequiredService<IFestiveRunner>();
+        await festiveRunner.Run();
+    }
 }
