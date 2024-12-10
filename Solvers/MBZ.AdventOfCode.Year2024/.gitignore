@@ -1,0 +1,3 @@
+# Remove all input data - this is fetched from online instead
+/Days/Day*/Day*-input.txt
+/Days/Day*/Day*-input-part*.txt
