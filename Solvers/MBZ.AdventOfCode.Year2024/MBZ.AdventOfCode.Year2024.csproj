@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\MBZ.AdventOfCode.Core\MBZ.AdventOfCode.Core.csproj" />
-    <ProjectReference Include="..\..\MBZ.AdventureOfCode.Aardward\MBZ.AdventOfCode.Aardward.csproj" />
   </ItemGroup>
 
   <ItemGroup>

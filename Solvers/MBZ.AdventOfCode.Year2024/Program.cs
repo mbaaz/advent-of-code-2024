@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MBZ.AdventOfCode.Year2024;
 
@@ -24,13 +23,12 @@ public static class Program
     {
         var serviceCollection = new ServiceCollection()
             .AddFestiveApplication(new FestiveApplication())
-            .ConfigureFestiveAppStartup()
+            .ConfigureFestiveAppServices()
         ;
-
-
 
         var serviceProvider = serviceCollection
             .BuildServiceProvider()
+            .ConfigureFestiveApp()
         ;
 
         return serviceProvider;
