@@ -76,7 +76,7 @@ public abstract class DaySolution : IDaySolutionDefinition
         }));
 
         // Run the requested puzzle part
-        Func<bool, string[], Action<OutputMessage>, int> puzzlePartRunner = puzzlePart switch
+        Func<bool, string[], Action<OutputMessage>, long> puzzlePartRunner = puzzlePart switch
         {
             PuzzlePart.Part1 => RunPart1,
             PuzzlePart.Part2 => RunPart2,
@@ -85,7 +85,7 @@ public abstract class DaySolution : IDaySolutionDefinition
 
         var expectedResultAttribute = puzzlePartRunner.GetMethodInfo().GetCustomAttribute<ExpectedResultAttribute>();
         var expectedResult = expectedResultAttribute == null 
-            ? int.MinValue
+            ? (long)0
             : useTestInput
                 ? expectedResultAttribute.TestResult
                 : expectedResultAttribute.Result
@@ -125,20 +125,20 @@ public abstract class DaySolution : IDaySolutionDefinition
     }
 
     [ExpectedResult(testResult: int.MinValue, result: int.MinValue)]
-    public virtual int RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
+    public virtual long RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         output(new("Puzzle Solver has not yet implemented [RunPart1] method!"));
         return -1;
     }
 
     [ExpectedResult(testResult: int.MinValue, result: int.MinValue)]
-    public virtual int RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
+    public virtual long RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         output(new("Puzzle Solver has not yet implemented [RunPart2] method!"));
         return -1;
     }
 
-    private static TimeSpan RunWithTimer(int expectedResult, Func<int> codeToTime, Action<PostPuzzleSolverRunResult> handleResult, Action<Exception> handleException)
+    private static TimeSpan RunWithTimer(long expectedResult, Func<long> codeToTime, Action<PostPuzzleSolverRunResult> handleResult, Action<Exception> handleException)
     {
         var watch = Stopwatch.StartNew();
 

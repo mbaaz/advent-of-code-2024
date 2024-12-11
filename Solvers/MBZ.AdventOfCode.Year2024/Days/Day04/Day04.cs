@@ -8,7 +8,7 @@ namespace MBZ.AdventOfCode.Year2024.Day04;
 public class Day04 : DaySolution, IDaySolutionImplementation
 {
     [ExpectedResult(testResult: 18, result: 2458)]
-    public override int RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
+    public override long RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var grid = new WordSearchGrid(input);
         var xmasOccurrences = grid.CalculateXmasOccurrences();
@@ -20,7 +20,7 @@ public class Day04 : DaySolution, IDaySolutionImplementation
     }
 
     [ExpectedResult(testResult: 9, result: 1945)]
-    public override int RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
+    public override long RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var grid = new WordSearchGrid(input);
 

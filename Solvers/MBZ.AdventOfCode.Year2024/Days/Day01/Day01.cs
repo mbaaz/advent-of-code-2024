@@ -8,7 +8,7 @@ namespace MBZ.AdventOfCode.Year2024.Day01;
 public class Day01 : DaySolution, IDaySolutionImplementation
 {
     [ExpectedResult(testResult: 11, result: 1660292)]
-    public override int RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
+    public override long RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var (list1, list2) = input.ParseDay01Input();
         var distance = list1.CalculateTotalDistanceToList(list2);
@@ -18,7 +18,7 @@ public class Day01 : DaySolution, IDaySolutionImplementation
     }
 
     [ExpectedResult(testResult: 31, result: 22776016)]
-    public override int RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
+    public override long RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var (list1, list2) = input.ParseDay01Input();
         var similarityScore = list1.CalculateSimilarityScore(list2);

@@ -1,8 +1,8 @@
 ﻿namespace MBZ.AdventOfCode.Core.Solvers;
 
 [AttributeUsage(AttributeTargets.Method)]
-public class ExpectedResultAttribute(int testResult, int result) : Attribute
+public class ExpectedResultAttribute(long testResult, long result) : Attribute
 {
-    public int TestResult { get; } = testResult;
-    public int Result { get; } = result;
+    public long TestResult { get; } = testResult;
+    public long Result { get; } = result;
 }
