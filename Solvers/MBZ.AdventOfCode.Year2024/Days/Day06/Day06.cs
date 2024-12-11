@@ -8,7 +8,7 @@ namespace MBZ.AdventOfCode.Year2024.Day06;
 public class Day06 : DaySolution, IDaySolutionImplementation
 {
     [ExpectedResult(testResult: 41, result: 5269)]
-    public override int RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
+    public override long RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var (map, guard) = input.ParseToDay06Data();
         map.SimulateGuardMovements(guard, out var totalMovements, out var isLooped);
@@ -21,7 +21,7 @@ public class Day06 : DaySolution, IDaySolutionImplementation
     }
 
     [ExpectedResult(testResult: 6, result: 1957)]
-    public override int RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
+    public override long RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var (map, guard) = input.ParseToDay06Data();
         var obstructionPositions = map.CalculateHowManyPositionsForObstructionToPlaceGuardInLoop(guard, out var positionsChecked);

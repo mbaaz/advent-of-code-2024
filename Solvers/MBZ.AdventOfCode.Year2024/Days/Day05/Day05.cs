@@ -8,7 +8,7 @@ namespace MBZ.AdventOfCode.Year2024.Day05;
 public class Day05 : DaySolution, IDaySolutionImplementation
 {
     [ExpectedResult(testResult: 143, result: 4814)]
-    public override int RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
+    public override long RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var (rules, updates) = input.ParseToDay05Data();
 
@@ -31,7 +31,7 @@ public class Day05 : DaySolution, IDaySolutionImplementation
     }
 
     [ExpectedResult(testResult: 123, result: 5448)]
-    public override int RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
+    public override long RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var (rules, updates) = input.ParseToDay05Data();
         var incorrectUpdates = updates.Where(rules.IsNotValidUpdate).Select(upd => new { Invalid = upd, Fixed = rules.FixIncorrectUpdate(upd) }).ToList();

@@ -8,7 +8,7 @@ namespace MBZ.AdventOfCode.Year2024.Day03;
 public class Day03 : DaySolution, IDaySolutionImplementation
 {
     [ExpectedResult(testResult: 161, result: 161085926)]
-    public override int RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
+    public override long RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var multiplyInstructions = input.GetMultiplyInstructions();
         var multiplicationSum = multiplyInstructions.ProductSum();
@@ -19,7 +19,7 @@ public class Day03 : DaySolution, IDaySolutionImplementation
     }
 
     [ExpectedResult(testResult: 48, result: 82045421)]
-    public override int RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
+    public override long RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var instructions = input.GetEnhancedInstructions();
         var multiplicationSum = instructions.EnhancedProductSum();

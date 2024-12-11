@@ -8,7 +8,7 @@ namespace MBZ.AdventOfCode.Year2024.Day15;
 public class Day15 : DaySolution, IDaySolutionImplementation
 {
     [ExpectedResult(testResult: int.MaxValue, result: int.MaxValue)]
-    public override int RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
+    public override long RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var data = input.ParseToDay15Data();
 
@@ -17,7 +17,7 @@ public class Day15 : DaySolution, IDaySolutionImplementation
     }
 
     [ExpectedResult(testResult: int.MaxValue, result: int.MaxValue)]
-    public override int RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
+    public override long RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
         var data = input.ParseToDay15Data();
 
