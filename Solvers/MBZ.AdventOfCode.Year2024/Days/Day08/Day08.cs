@@ -4,32 +4,28 @@ namespace MBZ.AdventOfCode.Year2024.Day08;
 
 // This is my solution to the Advent of Code challenge!
 // <see>https://adventofcode.com/2024/day/8</see>
-[DaySolution(Day = 8, IsActive = false)]
+[DaySolution(Day = 8, IsActive = true)]
 public class Day08 : DaySolution, IDaySolutionImplementation
 {
-    [ExpectedResult(testResult: int.MaxValue, result: int.MaxValue)]
+    [ExpectedResult(testResult: 14, result: 313)]
     public override long RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
-        var data = input.ParseToDay08Data();
+        var city = input.ParseToDay08Data();
+        city.CalculateAntiNodes();
+        var antiNodesCount = city.CountAntiNodes();
 
-        output(new("Result", "[not yet defined]"));
-        return -1;
+        output(new("Number of anti-nodes in the city", $"{antiNodesCount:n0}"));
+        return antiNodesCount;
     }
 
-    [ExpectedResult(testResult: int.MaxValue, result: int.MaxValue)]
+    [ExpectedResult(testResult: 34, result: 1064)]
     public override long RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
-        var data = input.ParseToDay08Data();
+        var city = input.ParseToDay08Data();
+        city.CalculateAntiNodes(extended: true);
+        var antiNodesCount = city.CountAntiNodes();
 
-        output(new("Result", "[not yet defined]"));
-        return -1;
-    }
-}
-
-public static class Day08Extensions
-{
-    public static List<string> ParseToDay08Data(this string[] input)
-    {
-        return input.ToList();
+        output(new("Number of anti-nodes in the city", $"{antiNodesCount:n0}"));
+        return antiNodesCount;
     }
 }
