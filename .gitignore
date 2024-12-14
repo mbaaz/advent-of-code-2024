@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+
+# Remove all input data - this is fetched from online instead
+/Solvers/*/Days/Day*/Day*-input.txt
+/Solvers/*/Days/Day*/Day*-input-part*.txt
