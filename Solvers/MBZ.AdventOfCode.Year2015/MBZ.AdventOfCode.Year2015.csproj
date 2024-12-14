@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="FestiveAppConfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\MBZ.AdventOfCode.Core\MBZ.AdventOfCode.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Days\Day01\" />
+    <Folder Include="Days\Day02\" />
+    <Folder Include="Days\Day03\" />
+    <Folder Include="Days\Day04\" />
+    <Folder Include="Days\Day05\" />
+    <Folder Include="Days\Day06\" />
+    <Folder Include="Days\Day07\" />
+    <Folder Include="Days\Day08\" />
+    <Folder Include="Days\Day09\" />
+    <Folder Include="Days\Day10\" />
+    <Folder Include="Days\Day11\" />
+    <Folder Include="Days\Day12\" />
+    <Folder Include="Days\Day13\" />
+    <Folder Include="Days\Day14\" />
+    <Folder Include="Days\Day15\" />
+    <Folder Include="Days\Day16\" />
+    <Folder Include="Days\Day17\" />
+    <Folder Include="Days\Day18\" />
+    <Folder Include="Days\Day19\" />
+    <Folder Include="Days\Day20\" />
+    <Folder Include="Days\Day21\" />
+    <Folder Include="Days\Day22\" />
+    <Folder Include="Days\Day23\" />
+    <Folder Include="Days\Day24\" />
+    <Folder Include="Days\Day25\" />
+  </ItemGroup>
+
+</Project>
