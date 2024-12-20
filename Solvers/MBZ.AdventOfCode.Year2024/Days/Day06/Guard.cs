@@ -1,13 +1,13 @@
 ﻿namespace MBZ.AdventOfCode.Year2024.Day06;
 
-public class Guard(Point? position, Heading heading)
+public class Guard(Position? position, Heading heading)
 {
-    private static readonly Dictionary<Heading, Point> Movements = new()
+    private static readonly Dictionary<Heading, Position> Movements = new()
     {
-        { Heading.Up,    new Point(-1,  0) },
-        { Heading.Down,  new Point( 1,  0) },
-        { Heading.Left,  new Point( 0, -1) },
-        { Heading.Right, new Point( 0,  1) },
+        { Heading.Up,    new Position(-1,  0) },
+        { Heading.Down,  new Position( 1,  0) },
+        { Heading.Left,  new Position( 0, -1) },
+        { Heading.Right, new Position( 0,  1) },
     };
 
     private static Heading GetRotatedHeading(Heading fromHeading)
@@ -23,10 +23,10 @@ public class Guard(Point? position, Heading heading)
         };
     }
 
-    public Point? Position { get; set; } = position;
+    public Position? Position { get; set; } = position;
     public Heading Heading { get; private set; } = heading;
 
-    public Point? GetNextPosition() =>
+    public Position? GetNextPosition() =>
         Position?.Move(Movements[Heading]);
 
     public void Move() =>

@@ -2,7 +2,7 @@
 
 namespace MBZ.AdventOfCode.Year2024.Day03;
 
-public static class Day03Extensions
+internal static class Day03Extensions
 {
     private static readonly Regex MultiplyInstructionRegex = new(@"mul\((?<Factor1>[0-9]+),(?<Factor2>[0-9]+)\)");
 

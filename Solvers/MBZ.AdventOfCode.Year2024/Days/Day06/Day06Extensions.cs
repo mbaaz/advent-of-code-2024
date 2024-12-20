@@ -1,8 +1,8 @@
 ﻿namespace MBZ.AdventOfCode.Year2024.Day06;
 
-public static class Day06Extensions
+internal static class Day06Extensions
 {
-    public static (Map, Guard) ParseToDay06Data(this string[] input)
+    public static (LabMap, Guard) ParseToDay06Data(this string[] input)
     {
         var data = input.Select(ParseLine).ToList();
         var tiles = data.Select(item => item.Item1).ToArray();
@@ -13,14 +13,14 @@ public static class Day06Extensions
             throw new Exception("Guard was not found on the map!");
         }
 
-        var map = new Map(tiles);
+        var map = new LabMap(tiles);
         return (map, guard);
     }
 
-    private static (Tile[], Guard?) ParseLine(string input, int rowIndex)
+    private static (LabRoomTile[], Guard?) ParseLine(string input, int rowIndex)
     {
         var data = input.ToCharArray()
-            .Select((row, columnIndex) => ParseRepresentation(row, new Point(rowIndex, columnIndex)))
+            .Select((row, columnIndex) => ParseRepresentation(row, new Position(rowIndex, columnIndex)))
             .ToList()
         ;
         var tiles = data.Select(item => item.Item1).ToArray();
@@ -28,7 +28,7 @@ public static class Day06Extensions
         return (tiles, guard);
     }
 
-    private static (Tile, Guard?) ParseRepresentation(char representation, Point position)
+    private static (LabRoomTile, Guard?) ParseRepresentation(char representation, Position position)
     {
         if (representation is '.')
         {

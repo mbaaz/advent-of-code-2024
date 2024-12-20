@@ -1,6 +1,6 @@
 ﻿namespace MBZ.AdventOfCode.Year2024.Day01;
 
-public static class Day01Extensions
+internal static class Day01Extensions
 {
     public static (List<int>, List<int>) ParseDay01Input(this string[] input)
     {
