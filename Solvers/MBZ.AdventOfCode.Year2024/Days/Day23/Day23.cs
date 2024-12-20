@@ -26,7 +26,7 @@ public class Day23 : DaySolution, IDaySolutionImplementation
     }
 }
 
-public static class Day23Extensions
+internal static class Day23Extensions
 {
     public static List<string> ParseToDay23Data(this string[] input)
     {

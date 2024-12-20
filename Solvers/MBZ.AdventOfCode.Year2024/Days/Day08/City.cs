@@ -1,16 +1,10 @@
 ﻿namespace MBZ.AdventOfCode.Year2024.Day08;
 
-public record City(CityTile[][] Tiles)
+public record City : Map<CityTile>
 {
-    public CityTile? GetTile(Position position) =>
-        IsValidPosition(position) ? Tiles[position.RowIndex][position.ColumnIndex] : null;
-
-    private bool IsValidPosition(Position position) =>
-        position.RowIndex >= 0 && 
-        position.RowIndex < Tiles.Length &&
-        position.ColumnIndex >= 0 && 
-        position.ColumnIndex < Tiles[position.RowIndex].Length
-    ;
+    public City(CityTile[][] tiles) : base(tiles)
+    {
+    }
 
     public void CalculateAntiNodes(bool extended = false)
     {
@@ -68,8 +62,7 @@ public record City(CityTile[][] Tiles)
 
     private bool MarkAntiNode(Position position)
     {
-        var tile = GetTile(position);
-        if (tile == null)
+        if(!TryGetTile(position, out var tile) || tile == null)
         {
             return false;
         }
@@ -93,8 +86,7 @@ public record City(CityTile[][] Tiles)
     ;
 
     private List<char> GetFrequencies() =>
-        Tiles
-            .SelectMany(t => t)
+        GetTiles()
             .Where(t => t.HasAntenna)
             .Select(t => t.Frequency)
             .Distinct()
@@ -102,10 +94,7 @@ public record City(CityTile[][] Tiles)
     ;
     
     public int CountAntiNodes() =>
-        Tiles
-            .SelectMany(t => t)
-            .Count(t => t.IsAntiNode)
-    ;
+        GetTiles().Count(t => t.IsAntiNode);
 
     public override string ToString() =>
         string.Join(Environment.NewLine, Tiles.Select(tileRow => string.Join("", tileRow.Select(t => t))));

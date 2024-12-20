@@ -2,7 +2,7 @@
 
 namespace MBZ.AdventOfCode.Year2024.Day05;
 
-public static class Day05Extensions
+internal static class Day05Extensions
 {
     private static readonly Regex ParseInputRegex = new("^(?<OrderingRule>(?<PageBefore>[0-9]+)\\|(?<PageAfter>[0-9]+))|(?<Update>([0-9]+(,[0-9]+)*))$");
 

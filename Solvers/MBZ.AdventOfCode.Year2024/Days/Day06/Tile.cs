@@ -1,6 +1,6 @@
 ﻿namespace MBZ.AdventOfCode.Year2024.Day06;
 
-public abstract class Tile
+public abstract class LabRoomTile
 {
-    public abstract Tile Copy();
+    public abstract LabRoomTile Copy();
 }

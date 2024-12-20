@@ -2,7 +2,7 @@
 
 namespace MBZ.AdventOfCode.Year2024.Day07;
 
-public static partial class Day07Extensions
+internal static partial class Day07Extensions
 {
     private const string EQUATION_REGEX_PATTERN = @"(?<Result>[0-9]+)\:(\ (?<Number>[0-9]+))+";
 

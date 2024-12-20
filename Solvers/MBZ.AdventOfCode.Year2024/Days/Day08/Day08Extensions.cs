@@ -1,6 +1,6 @@
 ﻿namespace MBZ.AdventOfCode.Year2024.Day08;
 
-public static class Day08Extensions
+internal static class Day08Extensions
 {
     public static City ParseToDay08Data(this string[] input)
     {

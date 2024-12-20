@@ -1,6 +1,6 @@
 ﻿namespace MBZ.AdventOfCode.Year2024.Day06;
 
-public class EmptyTile : Tile
+public class EmptyTile : LabRoomTile
 {
     private readonly bool[] _visitedHeadings = new bool[4]; // Heading have values 0-3
 

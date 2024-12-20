@@ -2,11 +2,16 @@
 
 namespace MBZ.AdventOfCode.Year2024.Day06;
 
-public class Map(Tile[][] tiles)
+public record LabMap : Map<LabRoomTile>
 {
-    public int GetVisitedTilesCount() =>
-        tiles.Sum(row => row.Count(tile => (tile is EmptyTile { IsVisited: true })));
+    public LabMap(LabRoomTile[][] labRoomTiles) : base(labRoomTiles)
+    {
+    }
 
+
+    public int GetVisitedTilesCount() =>
+        GetTiles().Count(tile => tile is EmptyTile { IsVisited: true });
+    
     public void SimulateGuardMovements(Guard guard, out int totalMovements, out bool isLooped)
     {
         totalMovements = 0;
@@ -22,10 +27,9 @@ public class Map(Tile[][] tiles)
     private void MoveGuard(Guard guard, out bool isLooped)
     {
         isLooped = false;
-
         var nextPosition = guard.GetNextPosition();
 
-        if (!IsOnMap(nextPosition))
+        if (!IsInMap(nextPosition))
         {
             // Guard moved out of map
             guard.Position = null;
@@ -57,34 +61,24 @@ public class Map(Tile[][] tiles)
         throw new Exception("Unknown type of Tile encountered!");
     }
 
-    private bool IsOnMap(Point? position) =>
-        position is { RowIndex: >= 0, ColumnIndex: >= 0 } &&
-        position.RowIndex < tiles.Length &&
-        position.ColumnIndex < tiles[position.RowIndex].Length;
-
-    private Tile? GetTile(Point position) =>
-        IsOnMap(position)
-            ? tiles[position.RowIndex][position.ColumnIndex]
-            : null;
-
-    public void SetTile(Point position, Tile tile)
+    public void SetTile(Position position, LabRoomTile tile)
     {
-        if (!IsOnMap(position)) {
+        if (!IsInMap(position)) {
             throw new Exception("Cannot set a tile not within the grid!");
         }
 
-        tiles[position.RowIndex][position.ColumnIndex] = tile;
+        Tiles[position.RowIndex][position.ColumnIndex] = tile;
     }
 
-    public Map Copy() => 
-        new(tiles.Select(row => row.Select(tile => tile.Copy()).ToArray()).ToArray());
+    public LabMap Copy() => 
+        new(Tiles.Select(row => row.Select(tile => tile.Copy()).ToArray()).ToArray());
 
     public int CalculateHowManyPositionsForObstructionToPlaceGuardInLoop(Guard guard, out int emptyPositionsChecked)
     {
         var possibleObstructionPositions = GetPossibleObstructionPositions(guard.Position!).ToList();
         emptyPositionsChecked = possibleObstructionPositions.Count;
 
-        var obstructionPositions = new ConcurrentBag<Point>();
+        var obstructionPositions = new ConcurrentBag<Position>();
 
         Parallel.ForEach(possibleObstructionPositions, (position) =>
         {
@@ -96,13 +90,13 @@ public class Map(Tile[][] tiles)
         return obstructionPositions.Count;
     }
 
-    private IEnumerable<Point> GetPossibleObstructionPositions(Point? guardPosition)
+    private IEnumerable<Position> GetPossibleObstructionPositions(Position? guardPosition)
     {
-        for (var rowIndex = 0; rowIndex < tiles.Length; rowIndex++)
+        for (var rowIndex = 0; rowIndex < Rows; rowIndex++)
         {
-            for (var columnIndex = 0; columnIndex < tiles[rowIndex].Length; columnIndex++)
+            for (var columnIndex = 0; columnIndex < Columns; columnIndex++)
             {
-                var position = new Point(rowIndex, columnIndex);
+                var position = new Position(rowIndex, columnIndex);
                 if (guardPosition == position)
                 {
                     continue;
@@ -119,7 +113,7 @@ public class Map(Tile[][] tiles)
         }
     }
 
-    private bool CheckIfObstructionWouldLoopGuard(Point position, Guard guard)
+    private bool CheckIfObstructionWouldLoopGuard(Position position, Guard guard)
     {
         var newGuard = guard.Copy();
 
