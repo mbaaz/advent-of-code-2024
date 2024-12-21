@@ -4,7 +4,7 @@ namespace MBZ.AdventOfCode.Year2024.Day11;
 
 // This is my solution to the Advent of Code challenge!
 // <see>https://adventofcode.com/2024/day/11</see>
-[DaySolution(Day = 11, IsActive = false)]
+[DaySolution(Day = 11, IsActive = true)]
 public class Day11 : DaySolution, IDaySolutionImplementation
 {
     [ExpectedResult(testResult: int.MaxValue, result: int.MaxValue)]
@@ -32,4 +32,14 @@ internal static class Day11Extensions
     {
         return input.ToList();
     }
+}
+
+public record StoneRow(List<Stone> Stones)
+{
+    private static IBlinkRule[] _rules =
+    [
+        new A0BecomesA1BlinkRule(),
+        new EvenNumberOfEngravedDigitsBlinkRule(),
+        new FallbackBlinkRule(),
+    ];
 }
