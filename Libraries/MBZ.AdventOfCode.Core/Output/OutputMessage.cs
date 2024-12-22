@@ -6,20 +6,28 @@ public class OutputMessage
     private const string TWO_PARTS_SEPARATOR = ": ";
 
     private List<string> Parts { get; }
+    public virtual bool SoftFlush { get; }
 
     public virtual int IfTwoPartsThenFirstPartLength => Parts.Count == 2 ? Parts[0].Length : 0;
 
     public OutputMessage(params object[] parts)
+        : this(softFlush: false, parts)
     {
+    }
+
+    public OutputMessage(bool softFlush, params object[] parts)
+    {
+        SoftFlush = softFlush;
+
         Parts = parts?
             .Select(item => item?.ToString() ?? string.Empty)
             .ToList() ?? []
         ;
 
-        if(parts == null || !parts.Any())
+        if (parts == null || !parts.Any())
             Parts.Add(string.Empty);
 
-        if(Parts.Count > 2)
+        if (Parts.Count > 2)
             throw new Exception("Output Message is not defined for more than 2 parts!");
     }
 
