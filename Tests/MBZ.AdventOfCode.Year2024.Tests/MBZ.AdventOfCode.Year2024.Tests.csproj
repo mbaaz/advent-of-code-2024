@@ -19,8 +19,4 @@
     <ProjectReference Include="..\..\Solvers\MBZ.AdventOfCode.Year2024\MBZ.AdventOfCode.Year2024.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Day11\" />
-  </ItemGroup>
-
 </Project>
