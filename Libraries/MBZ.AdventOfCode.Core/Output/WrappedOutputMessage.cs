@@ -9,6 +9,7 @@ public class WrappedOutputMessage : OutputMessage
     private readonly OutputMessage _wrappedMessage;
 
     public override int IfTwoPartsThenFirstPartLength => _wrappedMessage.IfTwoPartsThenFirstPartLength;
+    public override bool SoftFlush => _wrappedMessage.SoftFlush;
 
     public WrappedOutputMessage(string prefix, string suffix, OutputMessage wrappedMessage)
     {

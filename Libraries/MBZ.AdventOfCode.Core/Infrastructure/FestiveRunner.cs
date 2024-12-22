@@ -133,7 +133,10 @@ public class FestiveRunner : IFestiveRunner
             try
             {
                 Output.AddMessage($"{Environment.NewLine}{Environment.NewLine}");
-                await solver.Run(Output.AddMessage, useTestInput);
+                await Task.Run(() =>
+                {
+                    solver.Run(Output.AddMessage, useTestInput);
+                });
                 Output.AddMessage($"{Environment.NewLine}{Environment.NewLine}");
             }
             catch (Exception ex)
