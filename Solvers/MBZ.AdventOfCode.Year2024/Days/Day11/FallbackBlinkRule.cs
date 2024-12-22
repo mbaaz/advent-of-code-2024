@@ -2,9 +2,9 @@
 
 public class FallbackBlinkRule : IBlinkRule
 {
-    public bool IsMatch(Stone stone) =>
+    public bool IsMatch(long stoneEngraving) =>
         true;
 
-    public IEnumerable<Stone> Apply(Stone stone) =>
-        [new Stone(stone.Engraving * 2024)];
+    public IEnumerable<long> Apply(long stoneEngraving) =>
+        [stoneEngraving * 2024];
 }

@@ -2,13 +2,13 @@
 
 public class EvenNumberOfEngravedDigitsBlinkRule : IBlinkRule
 {
-    public bool IsMatch(Stone stone) =>
-        stone.Engraving.ToString().Length % 2 == 0;
+    public bool IsMatch(long stoneEngraving) =>
+        stoneEngraving.ToString().Length % 2 == 0;
 
-    public IEnumerable<Stone> Apply(Stone stone)
+    public IEnumerable<long> Apply(long stoneEngraving)
     {
-        var engraving = stone.Engraving.ToString();
-        yield return new Stone(Engraving: int.Parse(engraving[..(engraving.Length / 2)]));
-        yield return new Stone(Engraving: int.Parse(engraving[(engraving.Length / 2)..]));
+        var engraving = stoneEngraving.ToString();
+        yield return long.Parse(engraving[..(engraving.Length / 2)]);
+        yield return long.Parse(engraving[(engraving.Length / 2)..]);
     }
 }

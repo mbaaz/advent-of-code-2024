@@ -2,6 +2,6 @@
 
 public interface IBlinkRule
 {
-    bool IsMatch(Stone stone);
-    IEnumerable<Stone> Apply(Stone stone);
+    bool IsMatch(long stoneEngraving);
+    IEnumerable<long> Apply(long stoneEngraving);
 }

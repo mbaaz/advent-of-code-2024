@@ -2,9 +2,9 @@
 
 public class A0BecomesA1BlinkRule : IBlinkRule
 {
-    public bool IsMatch(Stone stone) =>
-        stone.Engraving == 0;
-    
-    public IEnumerable<Stone> Apply(Stone stone) =>
-        [new Stone(Engraving: 1)];
+    public bool IsMatch(long stoneEngraving) =>
+        stoneEngraving == 0;
+
+    public IEnumerable<long> Apply(long stoneEngraving) =>
+        [1];
 }

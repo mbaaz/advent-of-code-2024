@@ -1,4 +1,5 @@
-﻿using MBZ.AdventOfCode.Core.Solvers;
+﻿using System.Numerics;
+using MBZ.AdventOfCode.Core.Solvers;
 
 namespace MBZ.AdventOfCode.Year2024.Day11;
 
@@ -7,39 +8,39 @@ namespace MBZ.AdventOfCode.Year2024.Day11;
 [DaySolution(Day = 11, IsActive = true)]
 public class Day11 : DaySolution, IDaySolutionImplementation
 {
-    [ExpectedResult(testResult: int.MaxValue, result: int.MaxValue)]
+    [ExpectedResult(testResult: 55312, result: 224529)]
     public override long RunPart1(bool isTest, string[] input, Action<OutputMessage> output)
     {
-        var data = input.ParseToDay11Data();
+        var stones = input.ParseToDay11Data();
+        var result = stones.BlinkAndReportNumberOfStones(25, output);
 
-        output(new("Result", "[not yet defined]"));
-        return -1;
+        output(new("Number of Stones", $"{result:n0}"));
+        return (long)result;
     }
 
-    [ExpectedResult(testResult: int.MaxValue, result: int.MaxValue)]
+    [ExpectedResult(testResult: 65601038650482, result: 266820198587914)]
     public override long RunPart2(bool isTest, string[] input, Action<OutputMessage> output)
     {
-        var data = input.ParseToDay11Data();
+        var stones = input.ParseToDay11Data();
+        var result = stones.BlinkAndReportNumberOfStones(75, output);
 
-        output(new("Result", "[not yet defined]"));
-        return -1;
+        output(new("Number of Stones", $"{result:n0}"));
+        return (long)result;
     }
 }
 
 internal static class Day11Extensions
 {
-    public static List<string> ParseToDay11Data(this string[] input)
+    public static StoneRow ParseToDay11Data(this string[] input)
     {
-        return input.ToList();
+        var stones = input
+            .SelectMany(line => line
+                .Split(" ")
+                .Select(int.Parse)
+            )
+            .Select(s => new Stone(s))
+        ;
+        var stoneRow = new StoneRow(stones);
+        return stoneRow;
     }
-}
-
-public record StoneRow(List<Stone> Stones)
-{
-    private static IBlinkRule[] _rules =
-    [
-        new A0BecomesA1BlinkRule(),
-        new EvenNumberOfEngravedDigitsBlinkRule(),
-        new FallbackBlinkRule(),
-    ];
 }
